@@ -1,6 +1,6 @@
 class UserSerializer
   include JSONAPI::Serializer
-  attributes :username, :profile_pic, :profile_url
+  attributes :username, :profile_url
 
   has_many :posts
   has_many :comments

@@ -123,11 +123,11 @@ const Register = ({phone}) => {
                 dispatch(setNewUser(true))
                 navigate('/login')
             }else{
-                setError(res.json().data.errors)
+                setErrorMessage(res.json().data.errors)
             }
            
         }).catch(res=>{
-            setError('Please check that all fields have been filled in')
+            setErrorMessage('Please check that all fields have been filled in')
         })
             
         }else{

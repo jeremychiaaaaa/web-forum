@@ -106,20 +106,22 @@ const Register = ({phone}) => {
         
         const data = new FormData()
 
-        data.append('user[username]', temporaryUsername)
-        data.append('user[email]', email)
-        data.append('user[password]', password)
-        data.append('user[profile_pic]', profilePic)
+        data.append('username', temporaryUsername)
+        data.append('email', email)
+        data.append('password', password)
+        data.append('profile_pic', profilePic)
       
-      
+        
+
         if(confirmPassword===password) {
 
-        fetch('/api/v1/registrations',{
+        fetch('/api/v1/users',{
             method: 'POST',
-            body: data
+            body: data,
+            credentials: 'include'
         }).then(res=>{
             if(res.ok){
-               
+              
                 dispatch(setNewUser(true))
                 navigate('/login')
             }else{

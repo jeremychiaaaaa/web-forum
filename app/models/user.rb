@@ -12,6 +12,7 @@ class User < ApplicationRecord
     validates :username, uniqueness: true
     validates :username, length: { minimum: 4 }
 
+
     def profile_url
         Rails.application.routes.url_helpers.url_for(profile_pic) if profile_pic.attached?
     end 

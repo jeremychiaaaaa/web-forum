@@ -193,7 +193,8 @@ const CreatePost = ({phone}) => {
 
         fetch('http://localhost:3000/api/v1/posts',{
             method: 'POST',
-            body: data
+            body: data,
+            credentials: 'include'
         }).then(res=>{
             if(res.ok){
                 navigate('/')

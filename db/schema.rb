@@ -10,7 +10,10 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2022_12_19_075723) do
+ActiveRecord::Schema[7.0].define(version: 2022_12_26_181722) do
+  # These are extensions that must be enabled in order to support this database
+  enable_extension "plpgsql"
+
   create_table "active_storage_attachments", force: :cascade do |t|
     t.string "name", null: false
     t.string "record_type", null: false
@@ -49,18 +52,18 @@ ActiveRecord::Schema[7.0].define(version: 2022_12_19_075723) do
 
   create_table "comments", force: :cascade do |t|
     t.string "content"
-    t.integer "post_id", null: false
+    t.bigint "post_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.integer "user_id"
+    t.bigint "user_id"
     t.integer "parent_id"
     t.index ["post_id"], name: "index_comments_on_post_id"
     t.index ["user_id"], name: "index_comments_on_user_id"
   end
 
   create_table "like_comments", force: :cascade do |t|
-    t.integer "user_id", null: false
-    t.integer "comment_id", null: false
+    t.bigint "user_id", null: false
+    t.bigint "comment_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["comment_id"], name: "index_like_comments_on_comment_id"
@@ -69,8 +72,8 @@ ActiveRecord::Schema[7.0].define(version: 2022_12_19_075723) do
   end
 
   create_table "likes", force: :cascade do |t|
-    t.integer "user_id", null: false
-    t.integer "post_id", null: false
+    t.bigint "user_id", null: false
+    t.bigint "post_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["post_id"], name: "index_likes_on_post_id"
@@ -85,8 +88,8 @@ ActiveRecord::Schema[7.0].define(version: 2022_12_19_075723) do
     t.string "slug"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.integer "user_id"
-    t.integer "category_id"
+    t.bigint "user_id"
+    t.bigint "category_id"
     t.string "category_name"
     t.string "username"
     t.index ["category_id"], name: "index_posts_on_category_id"
@@ -96,20 +99,16 @@ ActiveRecord::Schema[7.0].define(version: 2022_12_19_075723) do
   create_table "users", force: :cascade do |t|
     t.string "username"
     t.string "email"
+    t.string "profile_pic"
     t.string "password_digest"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.string "profile_pic"
   end
 
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
   add_foreign_key "comments", "posts"
-  add_foreign_key "comments", "users"
   add_foreign_key "like_comments", "comments"
-  add_foreign_key "like_comments", "users"
   add_foreign_key "likes", "posts"
-  add_foreign_key "likes", "users"
   add_foreign_key "posts", "categories"
-  add_foreign_key "posts", "users"
 end

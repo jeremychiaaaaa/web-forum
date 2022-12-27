@@ -89,7 +89,7 @@ const Login = ({phone}) => {
         
         axios.post('/api/v1/auth/login',user,{withCredentials:true}).then(res=>{
             // this means that the user has successfully logged in
-            if(res.status === 200){   
+             
 
                 // set redux store username, user_id, user_pic state
 
@@ -101,7 +101,7 @@ const Login = ({phone}) => {
                 
                 navigate(new_user ? '/' : -1)
 
-            }
+            
         }).catch(res=> setErrorMessage('Please check that your username/password is correct'))
     }
 

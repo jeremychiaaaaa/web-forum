@@ -29,7 +29,7 @@ Rails.application.routes.draw do
           post 'login', to:'auth#create'
         end
       end
-      resources :registrations, only: [:create, :show, :index] 
+      resources :users, only: [:create, :show, :index] 
     end
   end
   #catch any path that does not meet pre-defined

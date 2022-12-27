@@ -1,6 +1,6 @@
 module Api 
     module V1 
-        class RegistrationsController < ApplicationController
+        class UsersController < ApplicationController
 
             #get all the users registered   
 

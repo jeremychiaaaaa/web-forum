@@ -30,29 +30,3 @@ categories = Category.create(
     ]
 )
 
-posts = Post.create([
-    {
-        title: "Post 1",
-        description: "This is post 1",
-        image_url: "",
-        category: categories.first
-    },
-    {
-        title: "Post 2",
-        description: "This is post 2",
-        image_url: "",
-        category: categories.second
-
-        
-    },
-    {
-        title: "Post 3",
-        description: "This is post 3",
-        image_url: "",
-        category: categories.third
-        
-    }
-])
-   
-
-

@@ -77,7 +77,7 @@ const LeftColumn = () => {
 
   return (
     <LeftBar>
-        <div style={{display:'flex',justifyContent:'center',alignItems:'center',alignSelf:'center',height:90}}>
+        <div style={{display:'flex',justifyContent:'center',alignItems:'center',alignSelf:'center',height:90,paddingTop:20}}>
             <span style={{fontSize:'1.6rem',textAlign:'center',cursor:'pointer', fontWeight:600,letterSpacing:'0.2rem',textAlign:'center',fontFamily:'Poppins'}}
             onClick={()=>navigate('/')}
             >WEBTALK</span>

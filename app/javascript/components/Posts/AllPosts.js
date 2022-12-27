@@ -112,7 +112,7 @@ const AllPosts = () => {
         axios.get('/api/v1/auth/logged_in',{withCredentials:true}).then(
             res=>{
                
-                if(res.status === 200){
+                if(res.data.data){
                     setReturningUsers(true)
                     // this means that user has already logged in previously
 

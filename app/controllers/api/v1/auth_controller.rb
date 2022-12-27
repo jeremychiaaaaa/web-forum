@@ -28,10 +28,9 @@ module Api
               if logged_in? && current_user
                 render json: UserSerializer.new(current_user,options).serializable_hash.to_json
               else
-                render json: {
-                  logged_in: false,
-                  message: 'Please check if your username/password is correct'
-                }
+               
+                render json: {error: current_user.errors.messages}, status: 422
+          
               end
           end
 

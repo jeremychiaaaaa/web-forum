@@ -16,7 +16,7 @@ module Api
                 render json: UserSerializer.new(@user,options).serializable_hash.to_json
               else
                 render json: { 
-                  status: 401,
+                  status: 422,
                   errors: ['User does not exist, please try again']
                 }
               end
@@ -29,7 +29,10 @@ module Api
                 render json: UserSerializer.new(current_user,options).serializable_hash.to_json
               else
                
-                render json: {error: current_user.errors.messages}, status: 422
+                render json: { 
+                  status: 422,
+                  errors: ['User does not exist, please try again']
+                }
           
               end
           end

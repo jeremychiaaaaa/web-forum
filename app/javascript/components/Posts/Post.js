@@ -148,7 +148,7 @@ const Post = ({created_at, category_name,
     useEffect(()=>{
         
 
-        axios.get(`/api/v1/registrations/${userId}`).then(res=>{
+        axios.get(`/api/v1/users/${userId}`).then(res=>{
             // using the userId of person that created the post, find his/her profile pic 
            
             setProfilePic(res.data.data.attributes.profile_url)

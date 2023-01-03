@@ -196,7 +196,7 @@ const AllPostsPhone = ({phone}) => {
         created_at:post.attributes.created_at,
         title: post.attributes.title,
         description: post.attributes.description,
-        image_url: post.attributes.image.record.image_url,
+        image_url: post.attributes.image_url,
         
        
         username: post.attributes.username,

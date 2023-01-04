@@ -22,4 +22,4 @@ test:
 
 production:
   <<: *default
-  database: web-forum_development
+  database: web-forum_development 

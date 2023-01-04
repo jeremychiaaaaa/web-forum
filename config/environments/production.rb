@@ -39,7 +39,10 @@ Rails.application.configure do
   # config.action_dispatch.x_sendfile_header = "X-Accel-Redirect" # for NGINX
 
   # Store uploaded files on the local file system (see config/storage.yml for options).
-  config.active_storage.service = :local
+  
+  #initially this was local however because of heroku using a "ephemeral" hard drive, setting it to local will not persist the files in active storage for instance the image attached to a created post. 
+  #Hence from heroku docs (https://devcenter.heroku.com/articles/active-storage-on-heroku), best practice is to use a cloud file storage service Amazon S3
+  config.active_storage.service = :amazon
 
   # Mount Action Cable outside main process or domain.
   # config.action_cable.mount_path = nil

@@ -191,7 +191,7 @@ const CreatePost = ({phone}) => {
         data.append('post[username]', username)
       
 
-        fetch('http://localhost:3000/api/v1/posts',{
+        fetch('/api/v1/posts',{
             method: 'POST',
             body: data,
             credentials: 'include'

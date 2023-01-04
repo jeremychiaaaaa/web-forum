@@ -126,7 +126,7 @@ const Login = ({phone}) => {
             Log In
             </LoginButton>  
             </form>
-            <span style={{fontFamily:'Poppins', color:'gray', fontSize:'0.9rem',marginTop:phone && 15}}>
+            <span style={{fontFamily:'Poppins', color:'gray', fontSize:'0.9rem',marginTop:phone && 15,cursor:'pointer'}}>
                 Don't have an account? <span style={{fontWeight:600, color:'#ff7f50', textDecoration:'underline'}} onClick={()=>navigate('/register')}>Sign up</span>
             </span>
             {

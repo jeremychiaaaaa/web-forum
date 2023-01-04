@@ -33,7 +33,6 @@ Rails.application.routes.draw do
     end
   end
   #catch any path that does not meet pre-defined
-  get '*path', to: 'pages#index', constraints: lambda { |req|
-  req.path.exclude? 'rails/active_storage'
-}
+
+  match "*path", to: "pages#index", via: :all, constraints: lambda { |request| !request.path_parameters[:path].start_with?('rails/') }
 end

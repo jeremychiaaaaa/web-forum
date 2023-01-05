@@ -133,119 +133,118 @@ const Register = ({ phone }) => {
 
   return (
     <Container>
-      {successfullyPosted === "posting" ? (
-        <ReactLoading
-          type={"balls"}
-          color={"#ff7f50"}
-          height={100}
-          width={100}
-        />
-      ) : (
-        <Wrapper phone={phone}>
-          <span
-            style={{
-              fontFamily: "Poppins",
-              fontSize: "1.2rem",
-              fontWeight: 600,
-              padding: 5,
-            }}
-          >
-            Create an account
-          </span>
+      <Wrapper phone={phone}>
+        <span
+          style={{
+            fontFamily: "Poppins",
+            fontSize: "1.2rem",
+            fontWeight: 600,
+            padding: 5,
+          }}
+        >
+          Create an account
+        </span>
 
-          <form onSubmit={handleSubmit} style={{ width: "100%" }}>
-            <InputField>
-              <input
-                type="text"
-                required
-                name="username"
-                placeholder="Username"
-                onChange={(e) => setTemporaryUsername(e.target.value)}
+        <form onSubmit={handleSubmit} style={{ width: "100%" }}>
+          <InputField>
+            <input
+              type="text"
+              required
+              name="username"
+              placeholder="Username"
+              onChange={(e) => setTemporaryUsername(e.target.value)}
+            />
+          </InputField>
+          <InputField>
+            <input
+              type="email"
+              required
+              name="email"
+              placeholder="Email"
+              onChange={(e) => setEmail(e.target.value)}
+            />
+          </InputField>
+          <InputField>
+            <input
+              type="file"
+              name="profilePic"
+              onChange={(e) => handleImageChange(e)}
+            />
+          </InputField>
+          <InputField>
+            <input
+              type="password"
+              required
+              name="password"
+              placeholder="Password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+            />
+          </InputField>
+          <InputField>
+            <input
+              type="password"
+              required
+              name="password"
+              placeholder="Confirm Password"
+              value={confirmPassword}
+              onChange={(e) => setConfirmPassword(e.target.value)}
+            />
+          </InputField>
+          {previewImage && (
+            <div style={{ alignSelf: "flex-start" }}>
+              <img
+                style={{ width: 110, height: 110, objectFit: "cover" }}
+                src={previewImage}
+                alt=""
               />
-            </InputField>
-            <InputField>
-              <input
-                type="email"
-                required
-                name="email"
-                placeholder="Email"
-                onChange={(e) => setEmail(e.target.value)}
-              />
-            </InputField>
-            <InputField>
-              <input
-                type="file"
-                name="profilePic"
-                onChange={(e) => handleImageChange(e)}
-              />
-            </InputField>
-            <InputField>
-              <input
-                type="password"
-                required
-                name="password"
-                placeholder="Password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-              />
-            </InputField>
-            <InputField>
-              <input
-                type="password"
-                required
-                name="password"
-                placeholder="Confirm Password"
-                value={confirmPassword}
-                onChange={(e) => setConfirmPassword(e.target.value)}
-              />
-            </InputField>
-            {previewImage && (
-              <div style={{ alignSelf: "flex-start" }}>
-                <img
-                  style={{ width: 110, height: 110, objectFit: "cover" }}
-                  src={previewImage}
-                  alt=""
-                />
-              </div>
-            )}
-            <SignUpButton onClick={handleSubmit}>Sign Up</SignUpButton>
-          </form>
+            </div>
+          )}
+          <SignUpButton onClick={handleSubmit}>Sign Up</SignUpButton>
+        </form>
+        <span
+          style={{
+            fontFamily: "Poppins",
+            color: "gray",
+            fontSize: "0.9rem",
+            marginTop: phone && 15,
+            cursor: "pointer",
+          }}
+        >
+          Already have an account?{" "}
           <span
             style={{
-              fontFamily: "Poppins",
-              color: "gray",
+              fontWeight: 600,
+              color: "#ff7f50",
+              textDecoration: "underline",
+            }}
+            onClick={() => navigate("/login")}
+          >
+            Log In
+          </span>
+        </span>
+        {errorMessage !== "" && (
+          <span
+            style={{
+              color: "red",
               fontSize: "0.9rem",
-              marginTop: phone && 15,
-              cursor: "pointer",
+              fontWeight: 600,
+              color: "red",
+              fontFamily: "Poppins",
             }}
           >
-            Already have an account?{" "}
-            <span
-              style={{
-                fontWeight: 600,
-                color: "#ff7f50",
-                textDecoration: "underline",
-              }}
-              onClick={() => navigate("/login")}
-            >
-              Log In
-            </span>
+            {errorMessage}
           </span>
-          {errorMessage !== "" && (
-            <span
-              style={{
-                color: "red",
-                fontSize: "0.9rem",
-                fontWeight: 600,
-                color: "red",
-                fontFamily: "Poppins",
-              }}
-            >
-              {errorMessage}
-            </span>
-          )}
-        </Wrapper>
-      )}
+        )}
+        {successfullyPosted === "posting" && (
+          <ReactLoading
+            type={"balls"}
+            color={"#ff7f50"}
+            height={70}
+            width={70}
+          />
+        )}
+      </Wrapper>
     </Container>
   );
 };

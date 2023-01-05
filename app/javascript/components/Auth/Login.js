@@ -111,91 +111,90 @@ const Login = ({ phone }) => {
 
   return (
     <Container>
-      {successfullyPosted === "posting" ? (
-        <ReactLoading
-          type={"balls"}
-          color={"#ff7f50"}
-          height={100}
-          width={100}
-        />
-      ) : (
-        <Wrapper phone={phone}>
+      <Wrapper phone={phone}>
+        <span
+          style={{
+            fontFamily: "Poppins",
+            fontSize: "1.2rem",
+            fontWeight: 600,
+            padding: 5,
+          }}
+        >
+          Welcome Back
+        </span>
+        <span
+          style={{
+            color: "gray",
+            fontWeight: 300,
+            fontFamily: "Poppins",
+            fontSize: "0.8rem",
+          }}
+        >
+          Enter your credentials to access your account
+        </span>
+        <form onSubmit={handleSubmit} style={{ width: "100%" }}>
+          <InputField>
+            <input
+              type="text"
+              name="username"
+              placeholder="Username"
+              onChange={(e) => setTemporaryUsername(e.target.value)}
+            />
+          </InputField>
+          <InputField>
+            <input
+              type="password"
+              name="password"
+              placeholder="Password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+            />
+          </InputField>
+          <LoginButton onClick={handleSubmit}>Log In</LoginButton>
+        </form>
+        <span
+          style={{
+            fontFamily: "Poppins",
+            color: "gray",
+            fontSize: "0.9rem",
+            marginTop: phone && 15,
+            cursor: "pointer",
+          }}
+        >
+          Don't have an account?{" "}
           <span
             style={{
-              fontFamily: "Poppins",
-              fontSize: "1.2rem",
               fontWeight: 600,
-              padding: 5,
+              color: "#ff7f50",
+              textDecoration: "underline",
             }}
+            onClick={() => navigate("/register")}
           >
-            Welcome Back
+            Sign up
           </span>
+        </span>
+        {errorMessage !== "" && (
           <span
             style={{
-              color: "gray",
-              fontWeight: 300,
-              fontFamily: "Poppins",
-              fontSize: "0.8rem",
-            }}
-          >
-            Enter your credentials to access your account
-          </span>
-          <form onSubmit={handleSubmit} style={{ width: "100%" }}>
-            <InputField>
-              <input
-                type="text"
-                name="username"
-                placeholder="Username"
-                onChange={(e) => setTemporaryUsername(e.target.value)}
-              />
-            </InputField>
-            <InputField>
-              <input
-                type="password"
-                name="password"
-                placeholder="Password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-              />
-            </InputField>
-            <LoginButton onClick={handleSubmit}>Log In</LoginButton>
-          </form>
-          <span
-            style={{
-              fontFamily: "Poppins",
-              color: "gray",
+              color: "red",
               fontSize: "0.9rem",
-              marginTop: phone && 15,
-              cursor: "pointer",
+              fontWeight: 600,
+              color: "red",
+              fontFamily: "Poppins",
             }}
           >
-            Don't have an account?{" "}
-            <span
-              style={{
-                fontWeight: 600,
-                color: "#ff7f50",
-                textDecoration: "underline",
-              }}
-              onClick={() => navigate("/register")}
-            >
-              Sign up
-            </span>
+            {errorMessage}
           </span>
-          {errorMessage !== "" && (
-            <span
-              style={{
-                color: "red",
-                fontSize: "0.9rem",
-                fontWeight: 600,
-                color: "red",
-                fontFamily: "Poppins",
-              }}
-            >
-              {errorMessage}
-            </span>
-          )}
-        </Wrapper>
-      )}
+        )}
+        {successfullyPosted === "posting" && (
+          <ReactLoading
+            type={"balls"}
+            color={"#ff7f50"}
+            height={70}
+            width={70}
+          />
+        )}
+      </Wrapper>
     </Container>
   );
 };

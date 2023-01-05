@@ -132,7 +132,7 @@ const Login = ({phone}) => {
             {
                 errorMessage !== '' 
                 &&
-                <span style={{color:'red', fontSize:'0.9rem',fontWeight:600,color:'red'}}>
+                <span style={{color:'red', fontSize:'0.9rem',fontWeight:600,color:'red',fontFamily:"Poppins"}}>
                     {errorMessage}
                 </span>
             }

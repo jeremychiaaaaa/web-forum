@@ -89,7 +89,7 @@ const Login = ({ phone }) => {
     };
 
     axios
-      .post("/api/v1/auth/login", user, { withCredentials: true })
+      .post("/api/v1/sessions/login", user, { withCredentials: true })
       .then((res) => {
         // this means that the user has successfully logged in
 

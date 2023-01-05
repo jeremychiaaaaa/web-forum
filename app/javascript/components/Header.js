@@ -66,7 +66,7 @@ const Header = ({ phone }) => {
 
   const LogOut = () => {
     axios
-      .post("/api/v1/auth/logout", { withCredentials: true })
+      .post("/api/v1/sessions/logout", { withCredentials: true })
       .then((res) => {
         console.log(res);
         dispatch(setUsername(""));

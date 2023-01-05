@@ -92,7 +92,7 @@ const AllPosts = () => {
     // check if user has previously logged in and already stored in cookies then automatically log him in
 
     axios
-      .get("/api/v1/auth/logged_in", { withCredentials: true })
+      .get("/api/v1/sessions/logged_in", { withCredentials: true })
       .then((res) => {
         if (res.data.data) {
           setReturningUsers(true);

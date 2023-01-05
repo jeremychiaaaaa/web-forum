@@ -22,11 +22,11 @@ Rails.application.routes.draw do
       resources :like_comments, only: [:create, :destroy] 
         
       resources :likes, only: [:create, :destroy]
-      resources :auth, only: %i[create] do
+      resources :sessions, only: %i[create] do
         collection do
-          get '/logged_in', to: 'auth#logged_in'
-          post 'logout', to: 'auth#logout'
-          post 'login', to:'auth#create'
+          get '/logged_in', to: 'sessions#logged_in'
+          post 'logout', to: 'sessions#logout'
+          post 'login', to:'sessions#create'
         end
       end
       resources :users, only: [:create, :show, :index] 

@@ -4,7 +4,7 @@ module Api
         
           #ensure that users only can create a post after logging in, where authenticate is a helper method defined in the application_controller.rb file
 
-          #before_action :authenticate, only: [:create, :update, :destroy]
+          before_action :authenticate, only: [:create, :update, :destroy]
 
 
           # get all posts

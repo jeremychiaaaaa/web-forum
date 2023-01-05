@@ -34,7 +34,7 @@ export const App = () => {
   return (
     <Provider store={Store}>
    
-    <div style={{display:'flex',width:'100vw'}}>
+    <div style={{display:'flex',width:'100vw',overflowX:'hidden'}}>
 
    {!phone && <LeftColumn/>} 
     <div style={{width:phone ? '100vw' :'85vw',display:'flex',flexDirection:'column',background:'rgba(220,220,220,0.2)',

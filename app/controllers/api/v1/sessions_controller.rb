@@ -3,7 +3,7 @@
 
 module Api 
   module V1 
-      class AuthController < ApplicationController
+      class SessionsController < ApplicationController
 
           #this controller is the control flow for the logging in and out of users
 

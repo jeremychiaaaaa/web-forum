@@ -3,7 +3,7 @@ import axios from "axios";
 import { redirect } from "react-router-dom";
 import LeftColumn from "./LeftColumn";
 import ViewPost from "./Posts/ViewPost";
-import AllPosts from "../css/AllPosts";
+import AllPosts from "../styles/AllPosts";
 import Header from "./Header";
 import Login from "./Auth/Login";
 import CreatePost from "./Posts/CreatePost";

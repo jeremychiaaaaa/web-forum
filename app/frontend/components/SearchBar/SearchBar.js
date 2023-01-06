@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import "./SearchBar.css";
+
 import { HiSearch } from "react-icons/hi";
 // adapted this search bar component from https://www.google.com/search?q=search+bar+react&rlz=1C5CHFA_enSG1010SG1011&oq=search+bar+&aqs=chrome.2.69i57j0i512l9.3145j0j4&sourceid=chrome&ie=UTF-8#fpstate=ive&vld=cid:414413ec,vid:x7niho285qs
 

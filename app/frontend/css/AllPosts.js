@@ -3,22 +3,22 @@ import axios from "axios";
 import styled from "styled-components";
 import { IoMdAdd } from "react-icons/io";
 import { HiSearch } from "react-icons/hi";
-import Post from "./Post";
+import Post from "../components/Posts/Post";
 import { useSelector, useDispatch } from "react-redux";
 import { MagnifyingGlass } from "react-loader-spinner";
 import { useNavigate } from "react-router-dom";
-import SearchBar from "../SearchBar/SearchBar";
+import SearchBar from "../components/SearchBar/SearchBar";
 import {
   setLogOut,
   setUserID,
   setUserLikedPost,
   setUsername,
   setUserPic,
-} from "../../redux/actions";
+} from "../redux/actions";
 //moment here is the package to help convert the created_at timestamp from the rails backend to a relative time in words
 
 import Moment from "react-moment";
-import { setSuccessfulEdit } from "../../redux/actions";
+import { setSuccessfulEdit } from "../redux/actions";
 const Container = styled.div`
   display: flex;
   flex-direction: column;
@@ -173,7 +173,7 @@ const AllPosts = () => {
     }
   }, [category, userLikeAction, userLogOut]);
 
-  console.log(userLogOut);
+  console.log(posts);
 
   // when user clicks on add post, need to check if the user has already logged in.
 
@@ -200,7 +200,7 @@ const AllPosts = () => {
       comments: post.relationships.comments,
       likes: post.relationships.likes,
       slug: post.attributes.slug,
-      userId: post.relationships.user.data.id,
+      userId: post.relationships.user.data?.id,
     };
   });
 

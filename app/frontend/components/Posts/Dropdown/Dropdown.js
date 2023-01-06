@@ -1,7 +1,7 @@
 // drop-down component was built with help from this tutorial :  https://www.youtube.com/watch?v=C845oiKpxcg&t=462s&ab_channel=TechCareWeb
 
 import React, { useState, useEffect } from "react";
-import "./Dropdown.css";
+
 import { BiChevronDown } from "react-icons/bi";
 import { useDispatch } from "react-redux";
 import { setCategory } from "../../../redux/actions";

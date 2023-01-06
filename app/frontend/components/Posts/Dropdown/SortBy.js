@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import "./Dropdown.css";
+
 import { BiChevronDown } from "react-icons/bi";
 
 const SortBy = ({ sortCategory, setSortCategory, phone }) => {

@@ -5,7 +5,7 @@ import { useSelector, useDispatch } from "react-redux";
 import styled from "styled-components";
 import { TfiComment } from "react-icons/tfi";
 import { FcLike } from "react-icons/fc";
-import "../App.css";
+
 import { AiOutlineHeart } from "react-icons/ai";
 
 import { useNavigate } from "react-router-dom";

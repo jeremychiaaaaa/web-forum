@@ -11,7 +11,7 @@ import {
   BrowserRouter,
   
 } from "react-router-dom";
-
+import '../css/App.css'
 document.addEventListener('DOMContentLoaded', () => {
   ReactDOM.render(
     <BrowserRouter>

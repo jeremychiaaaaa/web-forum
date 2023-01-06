@@ -9,7 +9,7 @@ import { MagnifyingGlass } from "react-loader-spinner";
 import { useNavigate } from "react-router-dom";
 import SearchBar from "../SearchBar/SearchBar";
 import {
-  setLogOut,
+ 
   setUserID,
   setUserLikedPost,
   setUsername,
@@ -85,9 +85,7 @@ const AllPosts = () => {
 
   const [individualPostLikesData, setIndividualPostLikesData] = useState([]);
 
-  // state to handle already return of previously logged in users
 
-  const [returningUsers, setReturningUsers] = useState(false);
 
   useEffect(() => {
     // check if user has previously logged in and already stored in cookies then automatically log him in
@@ -96,7 +94,7 @@ const AllPosts = () => {
       .get("/api/v1/sessions/logged_in", { withCredentials: true })
       .then((res) => {
         if (res.data.data) {
-          setReturningUsers(true);
+          
           // this means that user has already logged in previously
 
           // dispatch user details to redux store

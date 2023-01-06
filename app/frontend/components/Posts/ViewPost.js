@@ -16,6 +16,13 @@ import SortBy from "./Dropdown/SortBy";
 // shall use the react-modal package to handle the popup modal to check before user deletes the post
 import Modal from "react-modal";
 import ReactLoading from "react-loading";
+import {
+  setUserID,
+  setUserLikedPost,
+  setUsername,
+  setUserPic,
+  setSuccessfulEdit,
+} from "../../redux/actions";
 
 const Container = styled.div`
   display: flex;
@@ -164,6 +171,27 @@ const customStyles = {
   },
 };
 
+// phone styles for phone modal
+
+const customPhoneStyles = {
+  content: {
+    top: "50%",
+    left: "50%",
+    right: "auto",
+    bottom: "auto",
+    marginRight: "-50%",
+    transform: "translate(-50%, -50%)",
+    background: "white",
+    width: "95%",
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "flex-start",
+    borderRadius: "5px",
+    overflowX: "hidden",
+    padding: 0,
+  },
+};
+
 const ViewPost = ({ phone }) => {
   // get the specific post based on slug value from api
   const dispatch = useDispatch();
@@ -218,12 +246,52 @@ const ViewPost = ({ phone }) => {
 
   const navigate = useNavigate();
 
-  console.log(sortCategory);
-
   useEffect(() => {
     setParentComments([]);
 
-    setLocalUserLikedPost(userLikedPost);
+    // check if user has previously logged in and already stored in cookies then automatically log him in
+
+    axios
+      .get("/api/v1/sessions/logged_in", { withCredentials: true })
+      .then((res) => {
+        if (res.data.data) {
+          // this means that user has already logged in previously
+
+          // dispatch user details to redux store
+          dispatch(setUserID(res.data.data.id));
+          dispatch(setUsername(res.data.data.attributes.username));
+          dispatch(setUserPic(res.data.data.attributes.profile_url));
+
+          let temp = res.data.included;
+
+          // get posts that the user has liked
+
+          let liked_posts = temp
+            .map((item) => {
+              if (item.type === "like") {
+                return {
+                  post_id: item.attributes.post_id,
+                  like_id: item.id,
+                };
+              }
+            })
+            .filter((item) => item !== undefined);
+
+          // get posts that belongs to a specific user to allow delete and edit functionality
+
+          let userPost = temp
+            .map((item) => {
+              if (item.type === "post") {
+                return item.id;
+              }
+            })
+            .filter((item) => item !== undefined);
+          setLocalUserLikedPost(liked_posts);
+          dispatch(setUserLikedPost(liked_posts));
+          
+        }
+      })
+      .catch((res) => console.log(res));
 
     axios
       .get(`/api/v1/posts/${post_id}/${slug}`)
@@ -404,7 +472,10 @@ const ViewPost = ({ phone }) => {
   return (
     <Container phone={phone}>
       {/* Modal component here is the popup message before a user deletes a post or loader component after user creates a comment  */}
-      <Modal isOpen={modalOpen || loaderModal} style={customStyles}>
+      <Modal
+        isOpen={modalOpen || loaderModal}
+        style={phone ? customPhoneStyles : customStyles}
+      >
         <div
           style={{
             padding: 16,
@@ -455,7 +526,7 @@ const ViewPost = ({ phone }) => {
         >
           {modalOpen && (
             <>
-              <div style={{ width: "45%" }}></div>
+              <div style={{ width: phone ? "35%" : "45%" }}></div>
               <div style={{ display: "flex", gap: "10px" }}>
                 <Keep onClick={() => setModalOpen(false)}>Keep</Keep>
                 <Delete onClick={deletePost}>Delete</Delete>

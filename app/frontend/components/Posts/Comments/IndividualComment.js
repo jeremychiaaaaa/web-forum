@@ -314,7 +314,7 @@ const IndividualComment = ({
 
   // action to handle liking a comment
 
-  const handleLikeComment = () => {
+  const handleLikeComment = (commentId) => {
     let data = {
       comment_id: commentId,
     };
@@ -366,7 +366,13 @@ const IndividualComment = ({
                   item.comment_id === Number(commentId) ||
                   item.comment_id === commentId
               );
-              setLocalUserLikedComment(temp.splice(deletedIndex, 1));
+
+              if (temp.length > 1) {
+                setLocalUserLikedComment(temp.splice(deletedIndex, 1));
+              } else {
+                temp.pop();
+                setLocalUserLikedComment(temp);
+              }
             })
             .catch((res) => console.log(res));
         });
@@ -467,12 +473,12 @@ const IndividualComment = ({
                   cursor: "pointer",
                   marginBottom: 3,
                 }}
-                onClick={handleLikeComment}
+                onClick={() => handleLikeComment(commentId)}
               />
             ) : (
               <AiOutlineHeart
                 style={{ fontSize: "1.3rem", cursor: "pointer" }}
-                onClick={handleLikeComment}
+                onClick={() => handleLikeComment(commentId)}
               />
             )}
           </IconWrapper>

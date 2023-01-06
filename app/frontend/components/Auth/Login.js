@@ -38,7 +38,7 @@ const InputField = styled.div`
 
   input {
     width: 100%;
-
+    font-size: 16px;
     min-height: 30px;
     border-radius: 4px;
     border: 1px solid #e6e6e6;
@@ -128,6 +128,7 @@ const Login = ({ phone }) => {
             fontWeight: 300,
             fontFamily: "Poppins",
             fontSize: "0.8rem",
+            textAlign: phone && "center",
           }}
         >
           Enter your credentials to access your account

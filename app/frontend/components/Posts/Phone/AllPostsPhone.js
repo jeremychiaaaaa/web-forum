@@ -190,7 +190,7 @@ const AllPostsPhone = ({ phone }) => {
       comments: post.relationships.comments,
       likes: post.relationships.likes,
       slug: post.attributes.slug,
-      userId: post.relationships.user.data.id,
+      userId: post.relationships.user.data?.id,
     };
   });
 
@@ -304,7 +304,7 @@ const AllPostsPhone = ({ phone }) => {
           <IoMdAdd
             onClick={addPost}
             style={{
-              padding: 15,
+              padding: 10,
               borderRadius: 5,
               background: "#ff7f50",
               color: "white",

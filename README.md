@@ -1,6 +1,6 @@
 # README
 
-**This is a simple web forum website that supports CRUD operations such as creating, updating, editing and deleting posts / comments **
+#**This is a simple web forum website that supports CRUD operations such as creating, updating, editing and deleting posts / comments**
 
 This app uses: <br />
 <ul>
@@ -13,7 +13,7 @@ This app uses: <br />
 <br />
 <br />
 
-**Running it locally**
+##**Running it locally**
 
 _____________________
 
@@ -26,7 +26,9 @@ _____________________
     <li>Navigate to http://localhost:3000</li>
 </ul>
 
-**Notable Features of the website**
+##**Notable Features of the website**
+<br />
+<br />
 
 <ul>
     <li>User authentication</li>

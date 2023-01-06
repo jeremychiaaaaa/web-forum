@@ -42,7 +42,7 @@ const InputField = styled.div`
 
   input {
     width: 100%;
-
+    font-size: 16px;
     min-height: 10px;
     border-radius: 4px;
     border: 1px solid #e6e6e6;

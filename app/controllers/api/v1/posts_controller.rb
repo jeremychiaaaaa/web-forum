@@ -23,10 +23,10 @@ module Api
 
         
 
-          #get a specific post based on the title (slugged value) in the url
+          #get a specific post based on the post_id in the url
 
           def show 
-            post = Post.find_by(slug: params[:slug])
+            post = Post.find_by(id: params[:post_id])
             render json: PostSerializer.new(post,options).serializable_hash.to_json
           end
 

@@ -21,13 +21,13 @@ const Container = styled.div`
   align-items: center;
   gap: 10px;
   flex-direction: row;
-  width: 60%;
+  width: ${props=>!props.phone && '60%'};
   margin: 0px auto;
   padding: 15px 0px;
   transform: ${(props) => props.phone && "translateX(-10px)"};
 `;
 const Spacing = styled.div`
-  width: 40%;
+  width: ${(props) => (props.username !== '' && props.phone ? "15%" : "40%")};
 `;
 const Login = styled.div`
   padding: ${(props) => (props.phone ? "5px 20px" : "10px 25px")};
@@ -87,10 +87,10 @@ const Header = ({ phone }) => {
         height: 90,
       }}
     >
-      <Spacing />
+      <Spacing phone={phone} username={username} />
 
       {username === "" ? (
-        <Container>
+        <Container >
           <Login phone={phone}>
             <Link to="/login">Log In</Link>
           </Login>
@@ -148,7 +148,7 @@ const Header = ({ phone }) => {
             onClick={LogOut}
             style={{
               color: "gray",
-              transform: "translateX(50px)",
+              transform: phone ? "translateX(20px)" : "translateX(50px)",
               fontSize: "1.2rem",
               cursor: "pointer",
             }}

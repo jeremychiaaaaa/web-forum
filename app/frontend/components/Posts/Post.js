@@ -21,7 +21,7 @@ const Parent = styled.div`
 const Container = styled.div`
   width: ${(props) => (props.phone ? "90%" : "100%")};
   display: flex;
-  height: 120px;
+  height: ${(props) => (props.phone ? "fit-content" : "160px")};
   border: 1px solid transparent;
   padding: 15px;
   gap: 25px;
@@ -31,19 +31,20 @@ const Container = styled.div`
   box-shadow: 10px 10px 15px -4px rgba(0, 0, 0, 0.3);
 `;
 const Image = styled.img`
-  width: 25%;
+  width: ${(props) => (props.phone ? "25%" : "15%")};
   object-fit: cover;
   border-radius: 5px;
 `;
 //this is the container for the center portion including time title description and the bottom section in the same column
 
 const MiddlePortion = styled.div`
-  width: ${(props) => (props.phone ? "40%" : "50%")};
+  width: ${(props) => (props.phone ? "40%" : "60%")};
   display: flex;
   flex-direction: column;
   align-items: flex-start;
   gap: 5px;
-  justify-content: flex-start;
+  justify-content: space-between;
+  overflow: hidden;
 `;
 
 const Title = styled.div`
@@ -57,12 +58,13 @@ const Description = styled.span`
     font-size ${(props) => (props.phone ? "0.9rem" : "1.1rem")};
     font-weight:300;
     font-family:Poppins;
-    white-space: nowrap;
-    overflow: hidden;
+    white-space: break-spaces;
+    overflow:  ${(props) => (props.phone ? "auto" : "hidden")};
     text-overflow: ellipsis;
     display: -webkit-box;
-    width:90%;
-   -webkit-line-clamp: 2; /* number of lines to show */
+    width:100%;
+   -webkit-line-clamp: ${(props) =>
+     props.phone ? 3 : 2}; /* number of lines to show */
            line-clamp: 2; 
    -webkit-box-orient: vertical;
    color:gray;
@@ -105,7 +107,7 @@ const CreatedBy = styled.div`
 
 const LikeAndCommentWrapper = styled.div`
   position: absolute;
-  right: ${(props) => (props.phone ? "3%" : "5%")};
+  right: ${(props) => (props.phone ? "5%" : "5%")};
   bottom: 20px;
 `;
 
@@ -217,8 +219,12 @@ const Post = ({
                 (item) => (item) =>
                   item.post_id === Number(post_id) || item.post_id === post_id
               );
-
-              setLocalUserLikedPost(temp.splice(deletedIndex, 1));
+              if (temp.length > 1) {
+                setLocalUserLikedPost(temp.splice(deletedIndex, 1));
+              } else {
+                temp.pop();
+                setLocalUserLikedPost(temp);
+              }
             })
             .catch((res) => console.log(res));
         });
@@ -235,7 +241,7 @@ const Post = ({
   return (
     <Parent>
       <Container onClick={redirectToViewPost} phone={phone}>
-        <Image src={image_url} />
+        <Image src={image_url} phone={phone} />
         <MiddlePortion phone={phone}>
           <CreatedAt phone={phone}>
             Posted <Moment fromNow>{created_at}</Moment>
@@ -266,6 +272,8 @@ const Post = ({
               display: "flex",
               gap: phone ? 5 : 10,
               alignItems: "center",
+              marginTop: phone && 2,
+              transform: !phone && "translateY(-40px)",
             }}
           >
             @{users}

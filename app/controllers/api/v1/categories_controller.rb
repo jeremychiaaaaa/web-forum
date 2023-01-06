@@ -19,6 +19,19 @@ module Api
             render json: CategorySerializer.new(category,options).serializable_hash.to_json
           end
 
+
+
+          def destroy
+            category = Category.find_by(id: params[:id])
+            if category.destroy 
+              head :no_content
+          else 
+              render json: {error: category.errors.messages}, status: 422
+          end
+
+          end
+
+
           #to include the posts associated with the categories
 
           def options 

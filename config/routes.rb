@@ -3,7 +3,7 @@ Rails.application.routes.draw do
 
   namespace :api do 
     namespace :v1 do 
-      resources :categories, param: :slug
+      resources :categories
       resources :posts do
         collection do
           get 'category/:category_name', to: 'posts#get_related_posts'

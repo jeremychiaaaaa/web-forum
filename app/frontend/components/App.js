@@ -3,7 +3,7 @@ import axios from "axios";
 import { redirect } from "react-router-dom";
 import LeftColumn from "./LeftColumn";
 import ViewPost from "./Posts/ViewPost";
-import AllPosts from "../styles/AllPosts";
+import AllPosts from "./Posts/AllPosts";
 import Header from "./Header";
 import Login from "./Auth/Login";
 import CreatePost from "./Posts/CreatePost";
@@ -13,6 +13,7 @@ import EditPost from "./Posts/EditPost";
 import AllPostsPhone from "./Posts/Phone/AllPostsPhone";
 import { Provider } from "react-redux";
 import { Store } from "../redux/store";
+
 
 import { Route, Routes, BrowserRouter } from "react-router-dom";
 

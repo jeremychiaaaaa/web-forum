@@ -3,22 +3,23 @@ import axios from "axios";
 import styled from "styled-components";
 import { IoMdAdd } from "react-icons/io";
 import { HiSearch } from "react-icons/hi";
-import Post from "../components/Posts/Post";
+import Post from "./Post";
 import { useSelector, useDispatch } from "react-redux";
 import { MagnifyingGlass } from "react-loader-spinner";
 import { useNavigate } from "react-router-dom";
-import SearchBar from "../components/SearchBar/SearchBar";
+import SearchBar from "../SearchBar/SearchBar";
 import {
   setLogOut,
   setUserID,
   setUserLikedPost,
   setUsername,
   setUserPic,
-} from "../redux/actions";
+  setSuccessfulEdit,
+} from "../../redux/actions";
 //moment here is the package to help convert the created_at timestamp from the rails backend to a relative time in words
 
 import Moment from "react-moment";
-import { setSuccessfulEdit } from "../redux/actions";
+
 const Container = styled.div`
   display: flex;
   flex-direction: column;

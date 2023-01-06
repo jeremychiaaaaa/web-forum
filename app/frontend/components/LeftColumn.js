@@ -5,6 +5,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { setCategory } from "../redux/actions";
 import { useNavigate } from "react-router-dom";
 import { setAllCategories } from "../redux/actions";
+
 const LeftBar = styled.div`
   width: 20%;
   display: flex;

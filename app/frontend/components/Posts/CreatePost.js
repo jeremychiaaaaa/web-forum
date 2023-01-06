@@ -7,6 +7,7 @@ import { setAllCategories } from "../../redux/actions";
 import Select from "react-select";
 import { useSelector, useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import ReactLoading from "react-loading";
 
 const Container = styled.div`
   width: 100vw;
@@ -101,6 +102,10 @@ const CreatePost = ({ phone }) => {
 
   const [error, setError] = useState("");
 
+  // state to handle waiting for adding post
+
+  const [posting, setPosting] = useState(false);
+
   // regex expression here is to check if the file is a valid image type
   const imageValidationRegex = /image\/(png|jpg|jpeg)/gm;
 
@@ -146,14 +151,7 @@ const CreatePost = ({ phone }) => {
   // callback action for when submitting the post
 
   const handleSubmit = (e) => {
-    // let post = {
-    //     title: title,
-    //     description: description,
-    //     image_url: images,
-    //     category_id: categoryIDChoose,
-    //     category_name: categoryChoose,
-    //     username: username
-    // }
+    setPosting(true);
 
     const data = new FormData();
 
@@ -171,12 +169,15 @@ const CreatePost = ({ phone }) => {
     })
       .then((res) => {
         if (res.ok) {
+          setPosting(false);
           navigate("/");
         } else {
+          setPosting(false);
           setError("Please check that all fields have been filled in");
         }
       })
       .catch((res) => {
+        setPosting(false);
         setError("Please check that all fields have been filled in");
       });
   };
@@ -258,6 +259,16 @@ const CreatePost = ({ phone }) => {
             >
               {error}
             </span>
+          )}
+          {posting && (
+            <ReactLoading
+              type={"bubbles"}
+              color={"#ff7f50"}
+              height={70}
+              width={"90%"}
+              className="loader-post"
+              delay={2}
+            />
           )}
         </form>
       </FormWrapper>

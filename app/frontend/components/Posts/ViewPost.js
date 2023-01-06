@@ -15,6 +15,7 @@ import { AiOutlineClose, AiOutlineHeart } from "react-icons/ai";
 import SortBy from "./Dropdown/SortBy";
 // shall use the react-modal package to handle the popup modal to check before user deletes the post
 import Modal from "react-modal";
+import ReactLoading from "react-loading";
 
 const Container = styled.div`
   display: flex;
@@ -142,6 +143,8 @@ const Delete = styled.div`
   }
 `;
 
+// adapted directly from the react-modal package
+
 const customStyles = {
   content: {
     top: "50%",
@@ -195,9 +198,13 @@ const ViewPost = ({ phone }) => {
 
   const [errorMessage, setErrorMessage] = useState("");
 
-  // state to handle open and close modal
+  // state to handle open and close modal component to confirm if user wants to delete post
 
   const [modalOpen, setModalOpen] = useState(false);
+
+  // state to handle loader when user adds a comment to a post
+
+  const [loaderModal, setLoaderModal] = useState(false);
 
   // state to handle sorting category of comments
   // by default parent comments will be displayed by popularity (ie number of likes)
@@ -268,6 +275,7 @@ const ViewPost = ({ phone }) => {
     if (username === "") {
       navigate("/login");
     } else {
+      setLoaderModal(true);
       let data = {
         content: comment,
         post_id: post_id,
@@ -280,6 +288,7 @@ const ViewPost = ({ phone }) => {
           if (res.status === 200) {
             setReload(true);
             setComment("");
+            setLoaderModal(false);
           } else {
             setErrorMessage(res.data.errors);
           }
@@ -384,10 +393,18 @@ const ViewPost = ({ phone }) => {
     }
   };
 
+  const toggleModal = () => {
+    if (modalOpen) {
+      setModalOpen(false);
+    } else if (loaderModal) {
+      setLoaderModal(false);
+    }
+  };
+
   return (
     <Container phone={phone}>
-      {/* Modal component here is the popup message before a user deletes a post  */}
-      <Modal isOpen={modalOpen} style={customStyles}>
+      {/* Modal component here is the popup message before a user deletes a post or loader component after user creates a comment  */}
+      <Modal isOpen={modalOpen || loaderModal} style={customStyles}>
         <div
           style={{
             padding: 16,
@@ -398,22 +415,36 @@ const ViewPost = ({ phone }) => {
             alignItems: "center",
           }}
         >
-          <span>Delete Comment</span>
+          {modalOpen && <span>Delete Post</span>}
+          {/* spacing */}
+          {loaderModal && <div></div>}
           <AiOutlineClose
             style={{ fontSize: "1.1rem", cursor: "pointer" }}
-            onClick={() => setModalOpen(false)}
+            onClick={toggleModal}
           />
         </div>
-        <span
-          style={{
-            width: "100%",
-            margin: "10px 0",
-            padding: 16,
-            fontSize: "1.1rem",
-          }}
-        >
-          Are you sure you want to delete your post?
-        </span>
+        {modalOpen && (
+          <span
+            style={{
+              width: "100%",
+              margin: "10px 0",
+              padding: 16,
+              fontSize: "1.1rem",
+            }}
+          >
+            Are you sure you want to delete your post?
+          </span>
+        )}
+
+        {loaderModal && (
+          <ReactLoading
+            type={"bubbles"}
+            color={"#ff7f50"}
+            height={100}
+            width={"100%"}
+            className="comment-loader"
+          />
+        )}
         <div
           style={{
             display: "flex",
@@ -422,12 +453,16 @@ const ViewPost = ({ phone }) => {
             width: "100%",
           }}
         >
+          {modalOpen && (
+            <>
+              <div style={{ width: "45%" }}></div>
+              <div style={{ display: "flex", gap: "10px" }}>
+                <Keep onClick={() => setModalOpen(false)}>Keep</Keep>
+                <Delete onClick={deletePost}>Delete</Delete>
+              </div>
+            </>
+          )}
           {/* div for spacing */}
-          <div style={{ width: "45%" }}></div>
-          <div style={{ display: "flex", gap: "10px" }}>
-            <Keep onClick={() => setModalOpen(false)}>Keep</Keep>
-            <Delete onClick={deletePost}>Delete</Delete>
-          </div>
         </div>
       </Modal>
 

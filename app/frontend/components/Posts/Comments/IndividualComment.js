@@ -203,9 +203,11 @@ const IndividualComment = ({
 
     setLocalLikeCount(comment_likes);
 
+    // get the comments already liked by the particular logged in user
+
     if (user_id) {
       axios
-        .get(`/api/v1/registrations/${user_id}`)
+        .get(`/api/v1/users/${user_id}`)
         .then((res) => {
           let temp = res.data.included;
 
@@ -228,7 +230,7 @@ const IndividualComment = ({
 
     // using the userId find the specific username of user who made the comment
     axios
-      .get(`/api/v1/registrations/${userId}`)
+      .get(`/api/v1/users/${userId}`)
       .then((res) => {
         setUserComment(res.data.data.attributes.username);
         setProfileUrl(res.data.data.attributes.profile_url);

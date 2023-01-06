@@ -188,7 +188,7 @@ const Login = ({ phone }) => {
         )}
         {successfullyPosted === "posting" && (
           <ReactLoading
-            type={"balls"}
+            type={"bubbles"}
             color={"#ff7f50"}
             height={70}
             width={70}

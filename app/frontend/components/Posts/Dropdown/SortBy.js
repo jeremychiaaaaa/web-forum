@@ -15,8 +15,8 @@ const SortBy = ({ sortCategory, setSortCategory, phone }) => {
       <div
         className="dropdown-button"
         style={{
-          padding: phone ? "5px 10px" : "15px",
-          fontSize: phone ? "1.2rem" : "1.4rem",
+          padding: phone ? "5px 10px" : "10px 5px",
+          fontSize: phone ? "1.1rem" : "1.2rem",
         }}
         onClick={() => setActive(!active)}
       >

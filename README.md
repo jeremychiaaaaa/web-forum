@@ -1,24 +1,41 @@
 # README
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+**This is a simple web forum website that supports CRUD operations such as creating, updating, editing and deleting posts / comments **
 
-Things you may want to cover:
+This app uses: <br />
+<ul>
+    <li>React version: 18.2.0</li>
+    <li>Ruby version: 3.1.3</li>
+    <li>Rails version: 7.0.4</li>
+    <li>Styled Components version: 5.3.6</li>
+    <li>Database: postgresql</li>
+</ul>
+<br />
+<br />
 
-* Ruby version
+**Running it locally**
 
-* System dependencies
+_____________________
 
-* Configuration
+<ul>
+    <li>bundle install</li>
+    <li>rake db:create</li>
+    <li>rake db:migrate</li>
+    <li>npm install or yarn install</li>
+    <li>rails s</li>
+    <li>Navigate to http://localhost:3000</li>
+</ul>
 
-* Database creation
+**Notable Features of the website**
 
-* Database initialization
-
-* How to run the test suite
-
-* Services (job queues, cache servers, search engines, etc.)
-
-* Deployment instructions
-
-* ...
+<ul>
+    <li>User authentication</li>
+    <li>Create, edit and delete a post</li>
+    <li>Categorical filtering</li>
+    <li>Like / Unlike a post</li>
+    <li>Add, edit and delete comments</li>
+    <li>Supports nested commenting</li>
+    <li>Filter by latest or most popular posts / comments</li>
+    <li>Easily identify posts / comments that a user has already liked previously</li>
+    <li>Fully responsive webpage</li>
+</ul>

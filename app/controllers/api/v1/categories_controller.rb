@@ -21,16 +21,7 @@ module Api
 
 
 
-          def destroy
-            category = Category.find_by(id: params[:id])
-            if category.destroy 
-              head :no_content
-          else 
-              render json: {error: category.errors.messages}, status: 422
-          end
-
-          end
-
+ 
 
           #to include the posts associated with the categories
 

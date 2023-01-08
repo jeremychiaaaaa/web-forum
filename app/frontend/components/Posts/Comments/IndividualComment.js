@@ -252,7 +252,7 @@ const IndividualComment = ({
       })
       .catch((res) => console.log(res));
   }, [user_id]);
-
+  console.log(childComment)
   // action to handle edit comment
 
   const handleSubmit = () => {
@@ -299,7 +299,7 @@ const IndividualComment = ({
         user_id: userId,
         parent_id: commentId,
       };
-
+      console.log(commentData);
       axios
         .post(`/api/v1/comments`, commentData, { withCredentials: true })
         .then((res) => {

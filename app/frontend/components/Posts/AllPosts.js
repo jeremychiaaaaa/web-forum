@@ -26,7 +26,6 @@ const Container = styled.div`
   padding: 70px;
   gap: 25px;
   width: 100%;
-  height: 100vh;
   position: relative;
 `;
 const Header = styled.div`
@@ -38,7 +37,7 @@ const Header = styled.div`
 
 const Posts = styled.div`
   width: 80%;
-  height: 100vh;
+  height: fit-content;
   display: flex;
   flex-direction: column;
   align-items: flex-start;

@@ -21,7 +21,7 @@ const Parent = styled.div`
 const Container = styled.div`
   width: ${(props) => (props.phone ? "90%" : "100%")};
   display: flex;
-  height: ${(props) => (props.phone ? "fit-content" : "160px")};
+  height: 160px;
   border: 1px solid transparent;
   padding: 15px;
   gap: 25px;
@@ -100,7 +100,7 @@ const CreatedBy = styled.div`
   align-items: flex-start;
   flex-direction: column;
   justify-content: space-between;
-  height: 120px;
+  height: ${(props) => (props.phone ? "160px" : "120px")};
 `;
 
 // this is the container for like and comment icon.
@@ -263,7 +263,7 @@ const Post = ({
         </MiddlePortion>
       </Container>
       <LikeAndCommentWrapper phone={phone}>
-        <CreatedBy>
+        <CreatedBy phone={phone}>
           <span
             style={{
               fontFamily: "Poppins",
@@ -289,7 +289,12 @@ const Post = ({
           </span>
 
           <div
-            style={{ display: "flex", gap: 5, paddingBottom: phone ? 10 : 5 }}
+            style={{
+              display: "flex",
+              gap: 5,
+              paddingBottom: phone ? 0 : 5,
+              transform: phone && "translateX(3px)",
+            }}
           >
             <div
               style={{

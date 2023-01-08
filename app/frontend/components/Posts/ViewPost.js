@@ -497,7 +497,7 @@ const ViewPost = ({ phone }) => {
         {modalOpen && (
           <span
             style={{
-              width: "100%",
+              width: phone ? '90%' : "100%",
               margin: "10px 0",
               padding: 16,
               fontSize: "1.1rem",

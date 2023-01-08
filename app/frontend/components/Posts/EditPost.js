@@ -6,6 +6,7 @@ import Dropdown from "./Dropdown/Dropdown";
 import Select from "react-select";
 import { useSelector, useDispatch } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
+import ReactLoading from "react-loading";
 
 const Container = styled.div`
   width: 100vw;
@@ -101,6 +102,10 @@ const EditPost = () => {
 
   const [error, setError] = useState("");
 
+  // state to handle waiting for post to be edited
+
+  const [editing,setEditing] = useState(false)
+
   // regex expression here is to check if the file is a valid image type
   const imageValidationRegex = /image\/(png|jpg|jpeg)/gm;
 
@@ -133,7 +138,7 @@ const EditPost = () => {
         setDescription(res.data.data.attributes.description);
         setPreviewImage(res.data.data.attributes.image_url);
         setCategoryChoose(res.data.data.attributes.category_name);
-        setCategoryIDChoose(res.data.data.attributes.image.record.category_id);
+        setCategoryIDChoose(res.data.data.attributes.category_id);
       });
     }
   }, []);
@@ -144,24 +149,29 @@ const EditPost = () => {
     //  let post = {
     //     title: title,
     //     description: description,
-    //     image: images,
+    //     image: images === '' ? previewImage : images,
     //     category_id: categoryIDChoose,
     //     category_name: categoryChoose,
     //     username: username
     // }
 
     const data = new FormData();
-
     data.append("post[title]", title);
     data.append("post[description]", description);
-    data.append("post[image]", images);
+    if(images !== ''){
+       data.append("post[image]", images);
+    }
+   
     data.append("post[category_id]", categoryIDChoose);
     data.append("post[category_name]", categoryChoose);
     data.append("post[username]", username);
 
-    fetch(`http://localhost:3000/api/v1/posts/${post_id}`, {
+ 
+
+    fetch(`/api/v1/posts/${post_id}`, {
       method: "PATCH",
       body: data,
+      credentials: "include",
     })
       .then((res) => {
         if (res.ok) {

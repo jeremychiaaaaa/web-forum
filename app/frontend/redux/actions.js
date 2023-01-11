@@ -5,6 +5,7 @@ export const SET_ALL_CATEGORIES = "SET_ALL_CATEGORIES";
 export const SET_USER_PIC = "SET_USER_PIC";
 export const SET_NEW_USER = "SET_NEW_USER";
 export const SET_USER_LIKED_POST = "SET_USER_LIKED_POST";
+export const SET_USER_POSTS = "SET_USER_POSTS";
 export const SET_LOGOUT = "SET_LOGOUT";
 
 // action when user selects a specific category from the left panel of the home page
@@ -67,6 +68,15 @@ export const setUserLikedPost = (userLikedPost) => (dispatch) => {
   dispatch({
     type: "SET_USER_LIKED_POST",
     payload: userLikedPost,
+  });
+};
+
+// action to handle posts that was previously created by a user
+
+export const setUserPost = (userPosts) => (dispatch) => {
+  dispatch({
+    type: "SET_USER_POSTS",
+    payload: userPosts,
   });
 };
 

@@ -7,6 +7,7 @@ import {
   SET_USER_PIC,
   SET_NEW_USER,
   SET_USER_LIKED_POST,
+  SET_USER_POSTS,
 } from "./actions";
 
 const initialState = {
@@ -18,6 +19,7 @@ const initialState = {
   new_user: false,
   userLikedPost: [],
   userLogOut: false,
+  userPosts: [],
 };
 
 //reducers are the functions to change the state
@@ -37,6 +39,8 @@ export default function userReducer(state = initialState, action) {
       return { ...state, new_user: action.payload };
     case SET_USER_LIKED_POST:
       return { ...state, userLikedPost: action.payload };
+    case SET_USER_POSTS:
+      return { ...state, userPosts: action.payload };
     case SET_LOGOUT:
       return { ...state, userLogOut: action.payload };
 

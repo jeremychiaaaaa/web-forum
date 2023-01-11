@@ -252,7 +252,7 @@ const IndividualComment = ({
       })
       .catch((res) => console.log(res));
   }, [user_id]);
-  console.log(childComment)
+
   // action to handle edit comment
 
   const handleSubmit = () => {

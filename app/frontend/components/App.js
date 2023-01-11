@@ -11,20 +11,73 @@ import Register from "./Auth/Register";
 import EditPost from "./Posts/EditPost";
 
 import AllPostsPhone from "./Posts/Phone/AllPostsPhone";
-import { Provider } from "react-redux";
+import { Provider, useDispatch } from "react-redux";
 import { Store } from "../redux/store";
-
+import {
+  setUserID,
+  setUserLikedPost,
+  setUsername,
+  setUserPic,
+  setUserPost,
+} from "../redux/actions";
 
 import { Route, Routes, BrowserRouter } from "react-router-dom";
 
 export const App = () => {
+  const dispatch = useDispatch();
+
   // state to handle mobile display or not
   const [phone, setPhone] = useState(
     window.matchMedia("(max-width: 768px)").matches
   );
 
+  // whenever a user refreshes a page, load the user specific content if user previously signed in
+  useEffect(() => {
+    axios
+      .get("/api/v1/sessions/logged_in", { withCredentials: true })
+      .then((res) => {
+        if (res.data.data) {
+          // this means that user has already logged in previously
+
+          // dispatch user details to redux store
+          dispatch(setUserID(res.data.data.id));
+          dispatch(setUsername(res.data.data.attributes.username));
+          dispatch(setUserPic(res.data.data.attributes.profile_url));
+
+          let temp = res.data.included;
+
+          // get posts that the user has liked
+
+          let liked_posts = temp
+            .map((item) => {
+              if (item.type === "like") {
+                return {
+                  post_id: item.attributes.post_id,
+                  like_id: item.id,
+                };
+              }
+            })
+            .filter((item) => item !== undefined);
+
+          // get posts that belongs to a specific user to allow delete and edit functionality
+
+          let userPost = temp
+            .map((item) => {
+              if (item.type === "post") {
+                return item.id;
+              }
+            })
+            .filter((item) => item !== undefined);
+
+          dispatch(setUserLikedPost(liked_posts));
+          dispatch(setUserPost(userPost));
+        }
+      })
+      .catch((res) => console.log(res));
+  }, []);
+
   return (
-    <Provider store={Store}>
+    <>
       <div style={{ display: "flex", width: "100%", overflowX: "hidden" }}>
         {!phone && <LeftColumn />}
         <div
@@ -57,6 +110,6 @@ export const App = () => {
           </Routes>
         </div>
       </div>
-    </Provider>
+    </>
   );
 };

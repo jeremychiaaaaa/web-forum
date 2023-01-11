@@ -206,7 +206,6 @@ const ViewPost = ({ phone }) => {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [imageURL, setImageUrl] = useState("");
-  const [likeCount, setLikeCount] = useState();
   const [commentsCount, setCommentsCount] = useState();
 
   const [comment, setComment] = useState("");
@@ -240,7 +239,7 @@ const ViewPost = ({ phone }) => {
   const [sortCategory, setSortCategory] = useState("Most Popular");
 
   // local state to handle liking of post ( same idea as liking post on main page)
-
+  const [localLikeCount, setLocalLikeCount] = useState();
   const [localLikePost, setLocalLikePost] = useState(false);
   const [localUserLikedPost, setLocalUserLikedPost] = useState([]);
 
@@ -252,48 +251,6 @@ const ViewPost = ({ phone }) => {
     // check if user has previously logged in and already stored in cookies then automatically log him in
 
     axios
-      .get("/api/v1/sessions/logged_in", { withCredentials: true })
-      .then((res) => {
-        if (res.data.data) {
-          // this means that user has already logged in previously
-
-          // dispatch user details to redux store
-          dispatch(setUserID(res.data.data.id));
-          dispatch(setUsername(res.data.data.attributes.username));
-          dispatch(setUserPic(res.data.data.attributes.profile_url));
-
-          let temp = res.data.included;
-
-          // get posts that the user has liked
-
-          let liked_posts = temp
-            .map((item) => {
-              if (item.type === "like") {
-                return {
-                  post_id: item.attributes.post_id,
-                  like_id: item.id,
-                };
-              }
-            })
-            .filter((item) => item !== undefined);
-
-          // get posts that belongs to a specific user to allow delete and edit functionality
-
-          let userPost = temp
-            .map((item) => {
-              if (item.type === "post") {
-                return item.id;
-              }
-            })
-            .filter((item) => item !== undefined);
-          setLocalUserLikedPost(liked_posts);
-          dispatch(setUserLikedPost(liked_posts));
-          
-        }
-      })
-      .catch((res) => console.log(res));
-
-    axios
       .get(`/api/v1/posts/${post_id}/${slug}`)
       .then((res) => {
         setPostUsername(res.data.data.attributes.username);
@@ -301,7 +258,7 @@ const ViewPost = ({ phone }) => {
         setDescription(res.data.data.attributes.description);
         setImageUrl(res.data.data.attributes.image_url);
         setPostUsername(res.data.data.attributes.username);
-        setLikeCount(res.data.data.relationships.likes.data.length);
+        setLocalLikeCount(res.data.data.relationships.likes.data.length);
         setCommentsCount(res.data.data.relationships.comments.data.length);
 
         // get all comments related to this post
@@ -334,6 +291,8 @@ const ViewPost = ({ phone }) => {
         // get liked comments by user
       })
       .catch((res) => console.log(res));
+
+    setLocalUserLikedPost(userLikedPost);
   }, [reload, sortCategory]);
 
   // action to handle posting a comment
@@ -393,7 +352,7 @@ const ViewPost = ({ phone }) => {
     // check if user has logged in
 
     if (user_id) {
-      // need the target post_id that user is trying to like
+      // need the user_id and post_id
       let obj = {
         post_id: post_id,
       };
@@ -409,7 +368,7 @@ const ViewPost = ({ phone }) => {
             // make heart icon red
 
             setLocalLikePost(true);
-            setLikeCount((prev) => prev + 1);
+            setLocalLikeCount((prev) => prev + 1);
             let temp = {
               post_id: Number(post_id),
               like_id: res.data.data.id,
@@ -425,7 +384,7 @@ const ViewPost = ({ phone }) => {
 
           // decrement local like count
 
-          setLikeCount((prev) => prev - 1);
+          setLocalLikeCount((prev) => prev - 1);
           setLocalLikePost(false);
 
           //find the post_id that the user has liked and obtain the like_id to that post_id
@@ -446,13 +405,18 @@ const ViewPost = ({ phone }) => {
           axios
             .delete(`/api/v1/likes/${like_id}`)
             .then((res) => {
-              // upon successful unlike of a post, delete the postID from the array of userLikedPost
               let temp = localUserLikedPost;
+
               const deletedIndex = localUserLikedPost.findIndex(
                 (item) => (item) =>
                   item.post_id === Number(post_id) || item.post_id === post_id
               );
-              setLocalUserLikedPost(temp.splice(deletedIndex, 1));
+              if (temp.length > 1) {
+                setLocalUserLikedPost(temp.splice(deletedIndex, 1));
+              } else {
+                temp.pop();
+                setLocalUserLikedPost(temp);
+              }
             })
             .catch((res) => console.log(res));
         });
@@ -497,7 +461,7 @@ const ViewPost = ({ phone }) => {
         {modalOpen && (
           <span
             style={{
-              width: phone ? '90%' : "100%",
+              width: phone ? "90%" : "100%",
               margin: "10px 0",
               padding: 16,
               fontSize: "1.1rem",
@@ -551,7 +515,7 @@ const ViewPost = ({ phone }) => {
                 gap: 3,
               }}
             >
-              <span style={{ fontSize: "1.2rem" }}>{likeCount}</span>
+              <span style={{ fontSize: "1.2rem" }}>{localLikeCount}</span>
               {/* Color of heart depends on if user has liked the post */}
               {(userLikedPost.length > 0 &&
                 localUserLikedPost

@@ -19,9 +19,8 @@ Rails.application.routes.draw do
         end
       end
 
-      resources :like_comments, only: [:create, :destroy] 
-        
       resources :likes, only: [:create, :destroy]
+      resources :likes_comments, only: [:create, :destroy]
       resources :sessions, only: %i[create] do
         collection do
           get '/logged_in', to: 'sessions#logged_in'

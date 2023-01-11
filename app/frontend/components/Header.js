@@ -21,13 +21,13 @@ const Container = styled.div`
   align-items: center;
   gap: 10px;
   flex-direction: row;
-  width: ${props=>!props.phone && '60%'};
+  width: ${(props) => !props.phone && "60%"};
   margin: 0px auto;
   padding: 15px 0px;
   transform: ${(props) => props.phone && "translateX(-10px)"};
 `;
 const Spacing = styled.div`
-  width: ${(props) => (props.username !== '' && props.phone ? "15%" : "40%")};
+  width: ${(props) => (props.username !== "" && props.phone ? "15%" : "40%")};
 `;
 const Login = styled.div`
   padding: ${(props) => (props.phone ? "5px 20px" : "10px 25px")};
@@ -90,7 +90,7 @@ const Header = ({ phone }) => {
       <Spacing phone={phone} username={username} />
 
       {username === "" ? (
-        <Container >
+        <Container>
           <Login phone={phone}>
             <Link to="/login">Log In</Link>
           </Login>

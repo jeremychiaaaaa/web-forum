@@ -104,7 +104,7 @@ const EditPost = () => {
 
   // state to handle waiting for post to be edited
 
-  const [editing,setEditing] = useState(false)
+  const [editing, setEditing] = useState(false);
 
   // regex expression here is to check if the file is a valid image type
   const imageValidationRegex = /image\/(png|jpg|jpeg)/gm;
@@ -158,15 +158,13 @@ const EditPost = () => {
     const data = new FormData();
     data.append("post[title]", title);
     data.append("post[description]", description);
-    if(images !== ''){
-       data.append("post[image]", images);
+    if (images !== "") {
+      data.append("post[image]", images);
     }
-   
+
     data.append("post[category_id]", categoryIDChoose);
     data.append("post[category_name]", categoryChoose);
     data.append("post[username]", username);
-
- 
 
     fetch(`/api/v1/posts/${post_id}`, {
       method: "PATCH",

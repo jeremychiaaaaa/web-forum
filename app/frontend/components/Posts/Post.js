@@ -122,7 +122,6 @@ const Post = ({
   comments,
   post_id,
   slug,
-  userPosts,
   phone,
   topHeaderCategory,
   included,
@@ -131,7 +130,9 @@ const Post = ({
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  const { user_id, userLikedPost } = useSelector((state) => state.userReducer);
+  const { user_id, userLikedPost, userPosts } = useSelector(
+    (state) => state.userReducer
+  );
 
   // state to handle local like post to prevent reload of page every time user likes / unlike a post
 

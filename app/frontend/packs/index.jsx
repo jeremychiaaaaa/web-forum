@@ -2,7 +2,7 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
 import PropTypes from 'prop-types'
-import { App } from '../components/App';
+import AppWrapper from '../components/AppWrapper';
 import {
   createBrowserRouter,
   RouterProvider,
@@ -16,7 +16,7 @@ document.addEventListener('DOMContentLoaded', () => {
   ReactDOM.render(
     <BrowserRouter>
     <Routes>
-      <Route path='*' element={<App/>} />
+      <Route path='*' element={<AppWrapper/>} />
     </Routes>
    
    

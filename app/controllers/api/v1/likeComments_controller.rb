@@ -3,7 +3,7 @@ module Api
     module V1 
         class LikeCommentsController < ApplicationController
             before_action :authenticate
-            #before_action :set_post_to_delete, only: [:destroy]
+          
            
             #add a like to a comment
 

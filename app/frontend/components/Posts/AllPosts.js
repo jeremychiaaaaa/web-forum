@@ -9,12 +9,12 @@ import { MagnifyingGlass } from "react-loader-spinner";
 import { useNavigate } from "react-router-dom";
 import SearchBar from "../SearchBar/SearchBar";
 import {
- 
   setUserID,
   setUserLikedPost,
   setUsername,
   setUserPic,
   setSuccessfulEdit,
+  setUserPost,
 } from "../../redux/actions";
 //moment here is the package to help convert the created_at timestamp from the rails backend to a relative time in words
 
@@ -55,8 +55,15 @@ const AllPosts = () => {
   const dispatch = useDispatch();
   //category choose from left column passed own by redux
 
-  const { category, username, user_id, edit, userLikedPost, userLogOut } =
-    useSelector((state) => state.userReducer);
+  const {
+    category,
+    username,
+    user_id,
+    edit,
+    userLikedPost,
+    userLogOut,
+    userPosts,
+  } = useSelector((state) => state.userReducer);
 
   // state to handle category user chooses where defaults to latest
 
@@ -72,8 +79,6 @@ const AllPosts = () => {
 
   const [userLikeAction, setUserLikeAction] = useState(false);
 
-  const [userPosts, setUserPosts] = useState([]);
-
   // state to handle active search bar or not
 
   const [searchBarActive, setSearchBarActive] = useState(false);
@@ -84,53 +89,8 @@ const AllPosts = () => {
 
   const [individualPostLikesData, setIndividualPostLikesData] = useState([]);
 
-
-
   useEffect(() => {
     // check if user has previously logged in and already stored in cookies then automatically log him in
-
-    axios
-      .get("/api/v1/sessions/logged_in", { withCredentials: true })
-      .then((res) => {
-        if (res.data.data) {
-          
-          // this means that user has already logged in previously
-
-          // dispatch user details to redux store
-          dispatch(setUserID(res.data.data.id));
-          dispatch(setUsername(res.data.data.attributes.username));
-          dispatch(setUserPic(res.data.data.attributes.profile_url));
-
-          let temp = res.data.included;
-
-          // get posts that the user has liked
-
-          let liked_posts = temp
-            .map((item) => {
-              if (item.type === "like") {
-                return {
-                  post_id: item.attributes.post_id,
-                  like_id: item.id,
-                };
-              }
-            })
-            .filter((item) => item !== undefined);
-
-          // get posts that belongs to a specific user to allow delete and edit functionality
-
-          let userPost = temp
-            .map((item) => {
-              if (item.type === "post") {
-                return item.id;
-              }
-            })
-            .filter((item) => item !== undefined);
-
-          dispatch(setUserLikedPost(liked_posts));
-          setUserPosts(userPost);
-        }
-      })
-      .catch((res) => console.log(res));
 
     setLoader(true);
 
@@ -215,7 +175,6 @@ const AllPosts = () => {
         comments={item.comments}
         post_id={item.id}
         slug={item.slug}
-        userPosts={userPosts}
         topHeaderCategory={topHeaderCategory}
         userId={item.userId}
       />
@@ -239,7 +198,6 @@ const AllPosts = () => {
           likes={item.likes}
           comments={item.comments}
           slug={item.slug}
-          userPosts={userPosts}
           topHeaderCategory={topHeaderCategory}
           userId={item.userId}
         />

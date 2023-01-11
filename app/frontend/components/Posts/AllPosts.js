@@ -26,6 +26,7 @@ const Container = styled.div`
   padding: 70px;
   gap: 25px;
   width: 100%;
+  height:100vh;
   position: relative;
 `;
 const Header = styled.div`

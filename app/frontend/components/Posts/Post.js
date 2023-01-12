@@ -126,6 +126,7 @@ const Post = ({
   topHeaderCategory,
   included,
   userId,
+  setLoader
 }) => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -146,6 +147,7 @@ const Post = ({
       setProfilePic(res.data.data.attributes.profile_url);
     });
     setLocalLikeCount(likes.data.length);
+     setLoader(false)
   }, [topHeaderCategory]);
 
   //function to handle like and unlike of a post

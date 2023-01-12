@@ -8,6 +8,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { MagnifyingGlass } from "react-loader-spinner";
 import { useNavigate } from "react-router-dom";
 import SearchBar from "../SearchBar/SearchBar";
+
 import {
   setUserID,
   setUserLikedPost,
@@ -26,7 +27,7 @@ const Container = styled.div`
   padding: 70px;
   gap: 25px;
   width: 100%;
-  height: 100vh;
+  height: 100%;
   position: relative;
 `;
 const Header = styled.div`
@@ -122,7 +123,6 @@ const AllPosts = () => {
 
           //this is to get all the likes who posted the individual posts
 
-          setLoader(false);
           setUserLikeAction(false);
         })
         .catch((res) => console.log(res));
@@ -172,6 +172,7 @@ const AllPosts = () => {
         slug={item.slug}
         topHeaderCategory={topHeaderCategory}
         userId={item.userId}
+        setLoader={setLoader}
       />
     );
   });
@@ -195,6 +196,7 @@ const AllPosts = () => {
           slug={item.slug}
           topHeaderCategory={topHeaderCategory}
           userId={item.userId}
+          setLoader={setLoader}
         />
       );
     });

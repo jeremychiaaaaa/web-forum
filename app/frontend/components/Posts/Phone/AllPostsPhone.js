@@ -56,7 +56,7 @@ const NoPosts = styled.div`
 const AllPostsPhone = ({ phone }) => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const { allCategories, category, username } = useSelector(
+  const { allCategories, category, username, userLogOut } = useSelector(
     (state) => state.userReducer
   );
   const [posts, setPosts] = useState([]);
@@ -81,10 +81,6 @@ const AllPostsPhone = ({ phone }) => {
 
   const [searchBarError, setSearchBarError] = useState("");
 
-  // state to handle already return of previously logged in users
-
-  const [returningUsers, setReturningUsers] = useState(false);
-
   useEffect(() => {
     setLoader(true);
 
@@ -93,51 +89,6 @@ const AllPostsPhone = ({ phone }) => {
     axios.get("/api/v1/categories").then((res) => {
       setAllCats(res.data.data);
     });
-
-    // check if user has previously logged in and already stored in cookies then automatically log him in
-
-    axios
-      .get("/api/v1/sessions/logged_in", { withCredentials: true })
-      .then((res) => {
-        if (res.data.data) {
-          setReturningUsers(true);
-          // this means that user has already logged in previously
-
-          // dispatch user details to redux store
-          dispatch(setUserID(res.data.data.id));
-          dispatch(setUsername(res.data.data.attributes.username));
-          dispatch(setUserPic(res.data.data.attributes.profile_url));
-
-          let temp = res.data.included;
-
-          // get posts that the user has liked
-
-          let liked_posts = temp
-            .map((item) => {
-              if (item.type === "like") {
-                return {
-                  post_id: item.attributes.post_id,
-                  like_id: item.id,
-                };
-              }
-            })
-            .filter((item) => item !== undefined);
-
-          // get posts that belongs to a specific user to allow delete and edit functionality
-
-          let userPost = temp
-            .map((item) => {
-              if (item.type === "post") {
-                return item.id;
-              }
-            })
-            .filter((item) => item !== undefined);
-
-          dispatch(setUserLikedPost(liked_posts));
-          setUserPosts(userPost);
-        }
-      })
-      .catch((res) => console.log(res));
 
     //conditionally load posts displayed based on category choose. Loader form react-spinner will be used as data is fetched in between fetch requests
 
@@ -174,7 +125,7 @@ const AllPostsPhone = ({ phone }) => {
         })
         .catch((res) => console.log(res));
     }
-  }, [category, userLikeAction]);
+  }, [category, userLikeAction, userLogOut]);
   //form the combined array of posts,comments,likes
 
   let final = posts.map((post, index) => {

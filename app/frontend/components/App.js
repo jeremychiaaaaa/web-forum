@@ -19,6 +19,7 @@ import {
   setUsername,
   setUserPic,
   setUserPost,
+  setUserLikedComments,
 } from "../redux/actions";
 
 import { Route, Routes, BrowserRouter } from "react-router-dom";
@@ -68,9 +69,20 @@ export const App = () => {
               }
             })
             .filter((item) => item !== undefined);
+          let liked_comment = temp
+            .map((item) => {
+              if (item.type === "like_comment") {
+                return {
+                  comment_id: item.attributes.comment_id,
+                  like_comment_id: item.id,
+                };
+              }
+            })
+            .filter((item) => item !== undefined);
 
           dispatch(setUserLikedPost(liked_posts));
           dispatch(setUserPost(userPost));
+          dispatch(setUserLikedComments(liked_comment));
         }
       })
       .catch((res) => console.log(res));

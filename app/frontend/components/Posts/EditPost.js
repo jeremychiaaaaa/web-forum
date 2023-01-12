@@ -179,16 +179,6 @@ const EditPost = () => {
         }
       })
       .catch((res) => console.log(res));
-
-    // axios.post('/api/v1/posts',post,{withCredentials:true})
-    // .then(res=>{
-    //         if(res.status === 200){
-    //             navigate('/')
-
-    //         }else{
-    //             setError(res.data.errors)
-    //         }
-    // })
   };
 
   return (

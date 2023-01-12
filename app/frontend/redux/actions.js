@@ -7,7 +7,9 @@ export const SET_NEW_USER = "SET_NEW_USER";
 export const SET_USER_LIKED_POST = "SET_USER_LIKED_POST";
 export const SET_USER_POSTS = "SET_USER_POSTS";
 export const SET_LOGOUT = "SET_LOGOUT";
-
+export const SET_UNLIKE_POST = "SET_UNLIKE_POST";
+export const SET_USER_LIKED_COMMENT = "SET_USER_LIKED_COMMENT";
+export const SET_UNLIKE_COMMENT = "SET_UNLIKE_COMMENT";
 // action when user selects a specific category from the left panel of the home page
 
 export const setCategory = (category) => (dispatch) => {
@@ -86,5 +88,32 @@ export const setLogOut = (userLogOut) => (dispatch) => {
   dispatch({
     type: "SET_LOGOUT",
     payload: userLogOut,
+  });
+};
+
+// action to handle when user unlikes a post
+
+export const setUnlikePost = (id) => (dispatch) => {
+  dispatch({
+    type: "SET_UNLIKE_POST",
+    payload: id,
+  });
+};
+
+// action to handle commnents that users have already liked
+
+export const setUserLikedComments = (userLikedComment) => (dispatch) => {
+  dispatch({
+    type: "SET_USER_LIKED_COMMENT",
+    payload: userLikedComment,
+  });
+};
+
+// action to handle when user unlikes a comment
+
+export const setUnlikeComment = (comment_id) => (dispatch) => {
+  dispatch({
+    type: "SET_UNLIKE_COMMENT",
+    payload: comment_id,
   });
 };

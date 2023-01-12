@@ -2,7 +2,7 @@ import axios from "axios";
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import Moment from "react-moment";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { CiEdit } from "react-icons/ci";
 import { TfiComment } from "react-icons/tfi";
 import { FcLike } from "react-icons/fc";
@@ -12,6 +12,7 @@ import { useNavigate } from "react-router-dom";
 import { arrayOf } from "prop-types";
 
 import defaultImage from "../../../images/default-image.png";
+import { setUnlikeComment, setUserLikedComments } from "../../../redux/actions";
 const CommentContainer = styled.div`
   width: ${(props) => (props.phone ? "80%" : "85%")};
   height: ${(props) => (props.edit ? "100%" : "120px")};
@@ -155,47 +156,36 @@ const IndividualComment = ({
   phone,
   comment_likes_data,
 }) => {
+  const dispatch = useDispatch();
   const navigate = useNavigate();
+
   // gets the userId of the current logged in user
-  const { username, user_id } = useSelector((state) => state.userReducer);
+  const { username, user_id, userLikedComment } = useSelector(
+    (state) => state.userReducer
+  );
 
   const [userComment, setUserComment] = useState("");
 
   // state to handle child comments
-
   const [childComment, setChildComment] = useState([]);
 
   // state to handle making content editable
-
   const [edit, setEdit] = useState(false);
-
   const [edited, setEdited] = useState("");
 
   // state to handle replying a comment
-
   const [replying, setReplying] = useState(false);
   const [newComment, setNewComment] = useState("");
+
   const [errorMessage, setErrorMessage] = useState("");
+
   // state to handle the number of replies each comment has
   const [numberOfReplies, setNumberOfReplies] = useState(0);
 
-  // state to handle already liked comments by user
-
-  const [userLikedComment, setUserLikedComment] = useState([]);
-
-  // state to update number of likes locally instead of refreshing page upon each like / unlike action
-
+  // state to update number of likes each comment has
   const [localLikeCount, setLocalLikeCount] = useState();
 
-  const [localCommentLikeTargetComment, setLocalCommentLikeTargetComment] =
-    useState(false);
-
-  // to prevent refresh of the page upon each like / unlike action, store like data in local state
-
-  const [localUserLikedComment, setLocalUserLikedComment] = useState([]);
-
   // state to handle profile pic of user who uploaded the comment
-
   const [profileUrl, setProfileUrl] = useState();
 
   useEffect(() => {
@@ -204,29 +194,6 @@ const IndividualComment = ({
     setLocalLikeCount(comment_likes);
 
     // get the comments already liked by the particular logged in user
-
-    if (user_id) {
-      axios
-        .get(`/api/v1/users/${user_id}`)
-        .then((res) => {
-          let temp = res.data.included;
-
-          let liked_comment = temp
-            .map((item) => {
-              if (item.type === "like_comment") {
-                return {
-                  comment_id: item.attributes.comment_id,
-                  like_comment_id: item.id,
-                };
-              }
-            })
-            .filter((i) => i !== undefined);
-
-          setUserLikedComment(liked_comment);
-          setLocalUserLikedComment(liked_comment);
-        })
-        .catch((res) => console.log(res));
-    }
 
     // using the userId find the specific username of user who made the comment
     axios
@@ -322,29 +289,28 @@ const IndividualComment = ({
     // check if user has already logged in before allowing them to like a comment
 
     if (user_id) {
-      // once confirmed that user has logged in, update the local state and update the database in the meantime
-
       axios
         .post("/api/v1/like_comments", data, { withCredentials: true })
         .then((res) => {
           // successfully like a comment
           if (res.status === 200) {
             setLocalLikeCount((prev) => prev + 1);
-            setLocalCommentLikeTargetComment(true);
 
             let temp = {
               comment_id: Number(commentId),
               like_comment_id: res.data.data.id,
             };
-            setLocalUserLikedComment((prev) => [...prev, temp]);
+            //update the redux state with the new like_comment object
+            dispatch(setUserLikedComments(temp));
           }
         })
         .catch((res) => {
           // if user has already liked the comment
           setLocalLikeCount((prev) => prev - 1);
-          setLocalCommentLikeTargetComment(false);
 
-          let filtered = localUserLikedComment
+          // find the specific like_comment_id to the current comment
+
+          let filtered = userLikedComment
             .map((item) => {
               if (
                 item.comment_id === Number(commentId) ||
@@ -360,19 +326,8 @@ const IndividualComment = ({
           axios
             .delete(`/api/v1/like_comments/${like_comment_id}`)
             .then((res) => {
-              let temp = localUserLikedComment;
-              const deletedIndex = localUserLikedComment.findIndex(
-                (item) => (item) =>
-                  item.comment_id === Number(commentId) ||
-                  item.comment_id === commentId
-              );
-
-              if (temp.length > 1) {
-                setLocalUserLikedComment(temp.splice(deletedIndex, 1));
-              } else {
-                temp.pop();
-                setLocalUserLikedComment(temp);
-              }
+              // update the redux state
+              dispatch(setUnlikeComment(commentId));
             })
             .catch((res) => console.log(res));
         });
@@ -462,11 +417,10 @@ const IndividualComment = ({
 
             {/* this makes sure that if the user has already liked the post, then red heart icon to indicate already liked it */}
 
-            {(userLikedComment.length > 0 &&
-              localUserLikedComment
-                .map((item) => item.comment_id)
-                .indexOf(Number(commentId)) !== -1) ||
-            localCommentLikeTargetComment ? (
+            {userLikedComment.length > 0 &&
+            userLikedComment
+              .map((item) => item.comment_id)
+              .indexOf(Number(commentId)) !== -1 ? (
               <FcLike
                 style={{
                   fontSize: "1.3rem",

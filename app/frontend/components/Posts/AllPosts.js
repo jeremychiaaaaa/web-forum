@@ -26,7 +26,7 @@ const Container = styled.div`
   padding: 70px;
   gap: 25px;
   width: 100%;
-  height:100vh;
+  height: 100vh;
   position: relative;
 `;
 const Header = styled.div`
@@ -67,25 +67,22 @@ const AllPosts = () => {
   } = useSelector((state) => state.userReducer);
 
   // state to handle category user chooses where defaults to latest
-
   const [topHeaderCategory, setTopHeaderCategory] = useState("Latest");
 
   //state to handle when to load the spinner
 
   const [loader, setLoader] = useState(false);
 
+  //state to handle posts from databasse
   const [posts, setPosts] = useState([]);
 
   // state to handle when user likes and unlike to update the rendered screen with latest data from api
-
   const [userLikeAction, setUserLikeAction] = useState(false);
 
   // state to handle active search bar or not
-
   const [searchBarActive, setSearchBarActive] = useState(false);
 
   // state to handle search bar errors such as no posts found related to search input
-
   const [searchBarError, setSearchBarError] = useState("");
 
   const [individualPostLikesData, setIndividualPostLikesData] = useState([]);
@@ -132,10 +129,7 @@ const AllPosts = () => {
     }
   }, [category, userLikeAction, userLogOut]);
 
-  console.log(posts);
-
   // when user clicks on add post, need to check if the user has already logged in.
-
   const addPost = () => {
     if (username !== "") {
       navigate("/create-post");

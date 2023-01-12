@@ -9,8 +9,8 @@ import { FcLike } from "react-icons/fc";
 import { AiOutlineHeart } from "react-icons/ai";
 
 import { useNavigate } from "react-router-dom";
-import { setUserLikedPost } from "../../redux/actions";
 
+import { setUnlikePost, setUserLikedPost } from "../../redux/actions";
 import defaultImage from "../../images/default-image.png";
 
 const Parent = styled.div`
@@ -134,32 +134,24 @@ const Post = ({
     (state) => state.userReducer
   );
 
-  // state to handle local like post to prevent reload of page every time user likes / unlike a post
-
+  // state to handle like count
   const [localLikeCount, setLocalLikeCount] = useState();
-  const [localLikePost, setLocalLikePost] = useState(false);
-  const [localUserLikedPost, setLocalUserLikedPost] = useState([]);
 
   // state to handle profile pic of user who created each respective post
-
   const [profilePic, setProfilePic] = useState();
 
   useEffect(() => {
     axios.get(`/api/v1/users/${userId}`).then((res) => {
       // using the userId of person that created the post, find his/her profile pic
-
       setProfilePic(res.data.data.attributes.profile_url);
     });
-
     setLocalLikeCount(likes.data.length);
-    setLocalUserLikedPost(userLikedPost);
   }, [topHeaderCategory]);
 
   //function to handle like and unlike of a post
 
   const likeButtonFunctionality = (post_id) => {
     // check if user has logged in
-
     if (user_id) {
       // need the user_id and post_id
       let obj = {
@@ -175,30 +167,23 @@ const Post = ({
 
           if (res.status === 200) {
             // make heart icon red
-
-            setLocalLikePost(true);
             setLocalLikeCount((prev) => prev + 1);
             let temp = {
               post_id: Number(post_id),
               like_id: res.data.data.id,
             };
-
-            // update local like data state
-
-            setLocalUserLikedPost((prev) => [...prev, temp]);
+            dispatch(setUserLikedPost(temp));
           }
         })
         .catch((res) => {
           // if user has already liked the post
-
           // decrement local like count
 
           setLocalLikeCount((prev) => prev - 1);
-          setLocalLikePost(false);
-
           //find the post_id that the user has liked and obtain the like_id to that post_id
-
-          let filtered = localUserLikedPost
+          const temp = userLikedPost;
+          console.log(temp);
+          let filtered = temp
             .map((item) => {
               if (
                 item.post_id === Number(post_id) ||
@@ -208,24 +193,13 @@ const Post = ({
               }
             })
             .filter((item) => item !== undefined);
-
           let like_id = filtered[0];
           // unlike the post and force a refresh
           axios
             .delete(`/api/v1/likes/${like_id}`)
             .then((res) => {
-              let temp = localUserLikedPost;
-
-              const deletedIndex = localUserLikedPost.findIndex(
-                (item) => (item) =>
-                  item.post_id === Number(post_id) || item.post_id === post_id
-              );
-              if (temp.length > 1) {
-                setLocalUserLikedPost(temp.splice(deletedIndex, 1));
-              } else {
-                temp.pop();
-                setLocalUserLikedPost(temp);
-              }
+              const id = post_id;
+              dispatch(setUnlikePost(post_id));
             })
             .catch((res) => console.log(res));
         });
@@ -235,7 +209,6 @@ const Post = ({
   };
 
   const redirectToViewPost = () => {
-    dispatch(setUserLikedPost(localUserLikedPost));
     navigate(`post/${post_id}/${slug}`);
   };
 
@@ -310,11 +283,10 @@ const Post = ({
                 {localLikeCount}
               </span>
 
-              {(userLikedPost.length > 0 &&
-                localUserLikedPost
-                  .map((item) => item.post_id)
-                  .indexOf(Number(post_id)) !== -1) ||
-              localLikePost ? (
+              {userLikedPost.length > 0 &&
+              userLikedPost
+                .map((item) => item.post_id)
+                .indexOf(Number(post_id)) !== -1 ? (
                 <div
                   style={{ paddingTop: 4, cursor: "pointer" }}
                   onClick={() => likeButtonFunctionality(post_id)}

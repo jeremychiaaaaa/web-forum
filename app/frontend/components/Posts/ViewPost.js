@@ -16,6 +16,8 @@ import SortBy from "./Dropdown/SortBy";
 // shall use the react-modal package to handle the popup modal to check before user deletes the post
 import Modal from "react-modal";
 import ReactLoading from "react-loading";
+import { MagnifyingGlass } from "react-loader-spinner";
+import { setUnlikePost } from "../../redux/actions";
 import {
   setUserID,
   setUserLikedPost,
@@ -240,14 +242,14 @@ const ViewPost = ({ phone }) => {
 
   // local state to handle liking of post ( same idea as liking post on main page)
   const [localLikeCount, setLocalLikeCount] = useState();
-  const [localLikePost, setLocalLikePost] = useState(false);
-  const [localUserLikedPost, setLocalUserLikedPost] = useState([]);
 
+  //state to handle while fetching data from backend
+  const [loader, setLoader] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
     setParentComments([]);
-
+    setLoader(true);
     // check if user has previously logged in and already stored in cookies then automatically log him in
 
     axios
@@ -260,40 +262,35 @@ const ViewPost = ({ phone }) => {
         setPostUsername(res.data.data.attributes.username);
         setLocalLikeCount(res.data.data.relationships.likes.data.length);
         setCommentsCount(res.data.data.relationships.comments.data.length);
+      })
+      .catch((res) => console.log(res));
+    // get all comments related to this post
+    axios
+      .get(`/api/v1/comments/${post_id}`)
+      .then((res) => {
+        let temp = res.data.data;
+        setAllComments(temp);
+        let parents = temp.filter((item) => item.attributes.parent_id === null);
 
-        // get all comments related to this post
-        axios
-          .get(`/api/v1/comments/${post_id}`)
-          .then((res) => {
-            let temp = res.data.data;
-            setAllComments(temp);
-            let parents = temp.filter(
-              (item) => item.attributes.parent_id === null
+        if (sortCategory === "Most Popular") {
+          let parentsSortedByPopularity = parents.sort((a, b) => {
+            return (
+              b.relationships.like_comments.data.length -
+              a.relationships.like_comments.data.length
             );
+          });
 
-            if (sortCategory === "Most Popular") {
-              let parentsSortedByPopularity = parents.sort((a, b) => {
-                return (
-                  b.relationships.like_comments.data.length -
-                  a.relationships.like_comments.data.length
-                );
-              });
+          setParentComments(parentsSortedByPopularity);
+        } else {
+          setParentComments(parents);
+        }
 
-              setParentComments(parentsSortedByPopularity);
-            } else {
-              setParentComments(parents);
-            }
-
-            setReload(false);
-          })
-          .catch((res) => console.log(res));
-
-        // get liked comments by user
+        setReload(false);
       })
       .catch((res) => console.log(res));
 
-    setLocalUserLikedPost(userLikedPost);
-  }, [reload, sortCategory]);
+    setLoader(false);
+  }, [sortCategory]);
 
   // action to handle posting a comment
 
@@ -350,7 +347,6 @@ const ViewPost = ({ phone }) => {
 
   const likeButtonFunctionality = (post_id) => {
     // check if user has logged in
-
     if (user_id) {
       // need the user_id and post_id
       let obj = {
@@ -367,29 +363,25 @@ const ViewPost = ({ phone }) => {
           if (res.status === 200) {
             // make heart icon red
 
-            setLocalLikePost(true);
             setLocalLikeCount((prev) => prev + 1);
             let temp = {
               post_id: Number(post_id),
               like_id: res.data.data.id,
             };
 
-            // update local like data state
-
-            setLocalUserLikedPost((prev) => [...prev, temp]);
+            //update redux stor with new like object
+            dispatch(setUserLikedPost(temp));
           }
         })
         .catch((res) => {
           // if user has already liked the post
-
           // decrement local like count
-
           setLocalLikeCount((prev) => prev - 1);
-          setLocalLikePost(false);
 
           //find the post_id that the user has liked and obtain the like_id to that post_id
-
-          let filtered = localUserLikedPost
+          const temp = userLikedPost;
+          console.log(temp);
+          let filtered = temp
             .map((item) => {
               if (
                 item.post_id === Number(post_id) ||
@@ -399,24 +391,13 @@ const ViewPost = ({ phone }) => {
               }
             })
             .filter((item) => item !== undefined);
-
           let like_id = filtered[0];
-          // unlike the post and force a refresh
+          // unlike the post
           axios
             .delete(`/api/v1/likes/${like_id}`)
             .then((res) => {
-              let temp = localUserLikedPost;
-
-              const deletedIndex = localUserLikedPost.findIndex(
-                (item) => (item) =>
-                  item.post_id === Number(post_id) || item.post_id === post_id
-              );
-              if (temp.length > 1) {
-                setLocalUserLikedPost(temp.splice(deletedIndex, 1));
-              } else {
-                temp.pop();
-                setLocalUserLikedPost(temp);
-              }
+              const id = post_id;
+              dispatch(setUnlikePost(post_id));
             })
             .catch((res) => console.log(res));
         });
@@ -434,208 +415,222 @@ const ViewPost = ({ phone }) => {
   };
 
   return (
-    <Container phone={phone}>
-      {/* Modal component here is the popup message before a user deletes a post or loader component after user creates a comment  */}
-      <Modal
-        isOpen={modalOpen || loaderModal}
-        style={phone ? customPhoneStyles : customStyles}
-      >
-        <div
-          style={{
-            padding: 16,
-            borderBottom: "1px solid rgba(220,220,220,0.3)",
-            display: "flex",
-            justifyContent: "space-between",
-            width: "90%",
-            alignItems: "center",
-          }}
-        >
-          {modalOpen && <span>Delete Post</span>}
-          {/* spacing */}
-          {loaderModal && <div></div>}
-          <AiOutlineClose
-            style={{ fontSize: "1.1rem", cursor: "pointer" }}
-            onClick={toggleModal}
-          />
-        </div>
-        {modalOpen && (
-          <span
-            style={{
-              width: phone ? "90%" : "100%",
-              margin: "10px 0",
-              padding: 16,
-              fontSize: "1.1rem",
-            }}
+    <>
+      {loader ? (
+        <MagnifyingGlass
+          visible={true}
+          height="80"
+          width="80"
+          ariaLabel="MagnifyingGlass-loading"
+          wrapperStyle={{}}
+          wrapperClass="MagnifyingGlass-wrapper"
+          glassColor="#c0efff"
+          color="#e15b64"
+        />
+      ) : (
+        <Container phone={phone}>
+          {/* Modal component here is the popup message before a user deletes a post or loader component after user creates a comment  */}
+          <Modal
+            isOpen={modalOpen || loaderModal}
+            style={phone ? customPhoneStyles : customStyles}
           >
-            Are you sure you want to delete your post?
-          </span>
-        )}
-
-        {loaderModal && (
-          <ReactLoading
-            type={"bubbles"}
-            color={"#ff7f50"}
-            height={100}
-            width={"100%"}
-            className="comment-loader"
-          />
-        )}
-        <div
-          style={{
-            display: "flex",
-            padding: 20,
-            background: "rgba(220,220,220,0.4)",
-            width: "100%",
-          }}
-        >
-          {modalOpen && (
-            <>
-              <div style={{ width: phone ? "35%" : "45%" }}></div>
-              <div style={{ display: "flex", gap: "10px" }}>
-                <Keep onClick={() => setModalOpen(false)}>Keep</Keep>
-                <Delete onClick={deletePost}>Delete</Delete>
-              </div>
-            </>
-          )}
-          {/* div for spacing */}
-        </div>
-      </Modal>
-
-      {/* End of Modal Component */}
-
-      <Wrapper phone={phone}>
-        <TopHeaderPortion>
-          <Username>By @{postUsername}</Username>
-          <div style={{ display: "flex", gap: 5 }}>
             <div
               style={{
+                padding: 16,
+                borderBottom: "1px solid rgba(220,220,220,0.3)",
                 display: "flex",
-                justifyContent: "center",
+                justifyContent: "space-between",
+                width: "90%",
                 alignItems: "center",
-                gap: 3,
               }}
             >
-              <span style={{ fontSize: "1.2rem" }}>{localLikeCount}</span>
-              {/* Color of heart depends on if user has liked the post */}
-              {(userLikedPost.length > 0 &&
-                localUserLikedPost
-                  .map((item) => item.post_id)
-                  .indexOf(Number(post_id)) !== -1) ||
-              localLikePost ? (
-                <div
-                  style={{ paddingTop: 4, cursor: "pointer" }}
-                  onClick={() => likeButtonFunctionality(post_id)}
-                >
-                  <FcLike style={{ fontSize: "1.3rem" }} />
-                </div>
-              ) : (
-                <AiOutlineHeart
-                  style={{ fontSize: "1.3rem", cursor: "pointer" }}
-                  onClick={() => likeButtonFunctionality(post_id)}
-                />
-              )}
+              {modalOpen && <span>Delete Post</span>}
+              {/* spacing */}
+              {loaderModal && <div></div>}
+              <AiOutlineClose
+                style={{ fontSize: "1.1rem", cursor: "pointer" }}
+                onClick={toggleModal}
+              />
             </div>
-            <div
-              style={{
-                display: "flex",
-                justifyContent: "center",
-                alignItems: "center",
-                gap: 3,
-              }}
-            >
-              <span style={{ fontSize: "1.2rem" }}>{commentsCount}</span>
-              <TfiComment />
-            </div>
-          </div>
-        </TopHeaderPortion>
-
-        <div
-          style={{
-            display: "flex",
-            width: "90%",
-            justifyContent: "space-between",
-            alignItems: "center",
-          }}
-        >
-          <Title>{title}</Title>
-          <div style={{ display: "flex", gap: 5 }}>
-            {/* This here makes sure that the edit and delete icon will only appear on posts that belong to a user */}
-
-            {username === postUsername && (
-              <>
-                <CiEdit
-                  strokeWidth={1}
-                  style={{ cursor: "pointer", fontSize: "1.2rem" }}
-                  onClick={(e) => editPost(post_id, slug, e)}
-                />
-                <AiOutlineDelete
-                  style={{ cursor: "pointer", fontSize: "1.2rem" }}
-                  onClick={() => setModalOpen(true)}
-                />
-              </>
+            {modalOpen && (
+              <span
+                style={{
+                  width: phone ? "90%" : "100%",
+                  margin: "10px 0",
+                  padding: 16,
+                  fontSize: "1.1rem",
+                }}
+              >
+                Are you sure you want to delete your post?
+              </span>
             )}
-          </div>
-        </div>
 
-        <Image src={imageURL} />
-        <Body>{description}</Body>
-
-        <div
-          style={{
-            display: "flex",
-            width: "85%",
-            justifyContent: "space-between",
-            alignItems: "center",
-            paddingBottom: 30,
-          }}
-        >
-          <Title style={{ marginTop: 60, fontSize: "1.2rem" }}>
-            Comments ({commentsCount})
-          </Title>
-
-          <SortBy
-            phone={phone}
-            sortCategory={sortCategory}
-            setSortCategory={setSortCategory}
-          />
-        </div>
-
-        <InputField comment={comment} phone={phone}>
-          <TextArea
-            phone={phone}
-            rows="5"
-            placeholder="Add A Comment"
-            name="comment"
-            value={comment}
-            onChange={(e) => setComment(e.target.value)}
-          />
-          <span onClick={SubmitComment}>Submit</span>
-          {errorMessage !== "" && (
-            <span
+            {loaderModal && (
+              <ReactLoading
+                type={"bubbles"}
+                color={"#ff7f50"}
+                height={100}
+                width={"100%"}
+                className="comment-loader"
+              />
+            )}
+            <div
               style={{
-                color: "red",
-                fontSize: "0.9rem",
-                fontWeight: 600,
-                color: "red",
+                display: "flex",
+                padding: 20,
+                background: "rgba(220,220,220,0.4)",
+                width: "100%",
               }}
             >
-              {errorMessage}
-            </span>
-          )}
-        </InputField>
+              {modalOpen && (
+                <>
+                  <div style={{ width: phone ? "35%" : "45%" }}></div>
+                  <div style={{ display: "flex", gap: "10px" }}>
+                    <Keep onClick={() => setModalOpen(false)}>Keep</Keep>
+                    <Delete onClick={deletePost}>Delete</Delete>
+                  </div>
+                </>
+              )}
+              {/* div for spacing */}
+            </div>
+          </Modal>
 
-        {parentComments !== null && parentComments.length > 0 && (
-          <CommentList
-            phone={phone}
-            comments={parentComments}
-            reload={reload}
-            setReload={setReload}
-            allComments={allComments}
-            post_id={post_id}
-          />
-        )}
-      </Wrapper>
-    </Container>
+          {/* End of Modal Component */}
+
+          <Wrapper phone={phone}>
+            <TopHeaderPortion>
+              <Username>By @{postUsername}</Username>
+              <div style={{ display: "flex", gap: 5 }}>
+                <div
+                  style={{
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
+                    gap: 3,
+                  }}
+                >
+                  <span style={{ fontSize: "1.2rem" }}>{localLikeCount}</span>
+                  {/* Color of heart depends on if user has liked the post */}
+                  {userLikedPost.length > 0 &&
+                  userLikedPost
+                    .map((item) => item.post_id)
+                    .indexOf(Number(post_id)) !== -1 ? (
+                    <div
+                      style={{ paddingTop: 4, cursor: "pointer" }}
+                      onClick={() => likeButtonFunctionality(post_id)}
+                    >
+                      <FcLike style={{ fontSize: "1.3rem" }} />
+                    </div>
+                  ) : (
+                    <AiOutlineHeart
+                      style={{ fontSize: "1.3rem", cursor: "pointer" }}
+                      onClick={() => likeButtonFunctionality(post_id)}
+                    />
+                  )}
+                </div>
+                <div
+                  style={{
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
+                    gap: 3,
+                  }}
+                >
+                  <span style={{ fontSize: "1.2rem" }}>{commentsCount}</span>
+                  <TfiComment />
+                </div>
+              </div>
+            </TopHeaderPortion>
+
+            <div
+              style={{
+                display: "flex",
+                width: "90%",
+                justifyContent: "space-between",
+                alignItems: "center",
+              }}
+            >
+              <Title>{title}</Title>
+              <div style={{ display: "flex", gap: 5 }}>
+                {/* This here makes sure that the edit and delete icon will only appear on posts that belong to a user */}
+
+                {username === postUsername && (
+                  <>
+                    <CiEdit
+                      strokeWidth={1}
+                      style={{ cursor: "pointer", fontSize: "1.2rem" }}
+                      onClick={(e) => editPost(post_id, slug, e)}
+                    />
+                    <AiOutlineDelete
+                      style={{ cursor: "pointer", fontSize: "1.2rem" }}
+                      onClick={() => setModalOpen(true)}
+                    />
+                  </>
+                )}
+              </div>
+            </div>
+
+            <Image src={imageURL} />
+            <Body>{description}</Body>
+
+            <div
+              style={{
+                display: "flex",
+                width: "85%",
+                justifyContent: "space-between",
+                alignItems: "center",
+                paddingBottom: 30,
+              }}
+            >
+              <Title style={{ marginTop: 60, fontSize: "1.2rem" }}>
+                Comments ({commentsCount})
+              </Title>
+
+              <SortBy
+                phone={phone}
+                sortCategory={sortCategory}
+                setSortCategory={setSortCategory}
+              />
+            </div>
+
+            <InputField comment={comment} phone={phone}>
+              <TextArea
+                phone={phone}
+                rows="5"
+                placeholder="Add A Comment"
+                name="comment"
+                value={comment}
+                onChange={(e) => setComment(e.target.value)}
+              />
+              <span onClick={SubmitComment}>Submit</span>
+              {errorMessage !== "" && (
+                <span
+                  style={{
+                    color: "red",
+                    fontSize: "0.9rem",
+                    fontWeight: 600,
+                    color: "red",
+                  }}
+                >
+                  {errorMessage}
+                </span>
+              )}
+            </InputField>
+
+            {parentComments !== null && parentComments.length > 0 && (
+              <CommentList
+                phone={phone}
+                comments={parentComments}
+                reload={reload}
+                setReload={setReload}
+                allComments={allComments}
+                post_id={post_id}
+              />
+            )}
+          </Wrapper>
+        </Container>
+      )}
+    </>
   );
 };
 

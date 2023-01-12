@@ -8,6 +8,9 @@ import {
   SET_NEW_USER,
   SET_USER_LIKED_POST,
   SET_USER_POSTS,
+  SET_UNLIKE_POST,
+  SET_USER_LIKED_COMMENT,
+  SET_UNLIKE_COMMENT,
 } from "./actions";
 
 const initialState = {
@@ -20,6 +23,7 @@ const initialState = {
   userLikedPost: [],
   userLogOut: false,
   userPosts: [],
+  userLikedComment: [],
 };
 
 //reducers are the functions to change the state
@@ -38,7 +42,31 @@ export default function userReducer(state = initialState, action) {
     case SET_NEW_USER:
       return { ...state, new_user: action.payload };
     case SET_USER_LIKED_POST:
-      return { ...state, userLikedPost: action.payload };
+      return {
+        ...state,
+        userLikedPost: state.userLikedPost.concat(action.payload),
+      };
+    case SET_UNLIKE_POST:
+      const id = action.payload;
+      return {
+        ...state,
+        userLikedPost: state.userLikedPost.filter(
+          (item) => item.post_id !== Number(id)
+        ),
+      };
+    case SET_USER_LIKED_COMMENT:
+      return {
+        ...state,
+        userLikedComment: state.userLikedComment.concat(action.payload),
+      };
+    case SET_UNLIKE_COMMENT:
+      const comment_id = action.payload;
+      return {
+        ...state,
+        userLikedComment: state.userLikedComment.filter(
+          (item) => item.comment_id !== Number(comment_id)
+        ),
+      };
     case SET_USER_POSTS:
       return { ...state, userPosts: action.payload };
     case SET_LOGOUT:

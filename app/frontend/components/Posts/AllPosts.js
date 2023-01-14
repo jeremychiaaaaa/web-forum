@@ -118,7 +118,7 @@ const AllPosts = () => {
         .get(`/api/v1/posts/category/${category}`)
         .then((res) => {
           //this is to get all the posts from the database
-
+          setLoader(false);
           setPosts(res.data.data);
 
           //this is to get all the likes who posted the individual posts
@@ -128,7 +128,7 @@ const AllPosts = () => {
         .catch((res) => console.log(res));
     }
   }, [category, userLikeAction, userLogOut]);
-
+  console.log(category)
   // when user clicks on add post, need to check if the user has already logged in.
   const addPost = () => {
     if (username !== "") {

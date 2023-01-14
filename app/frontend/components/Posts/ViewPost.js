@@ -290,7 +290,7 @@ const ViewPost = ({ phone }) => {
       .catch((res) => console.log(res));
 
     setLoader(false);
-  }, [sortCategory]);
+  }, [sortCategory, reload]);
 
   // action to handle posting a comment
 
@@ -477,15 +477,24 @@ const ViewPost = ({ phone }) => {
             <div
               style={{
                 display: "flex",
-                padding: 20,
+                padding: phone ? 20 : 15,
                 background: "rgba(220,220,220,0.4)",
                 width: "100%",
+                position: "relative",
+                height: !phone && 40,
               }}
             >
               {modalOpen && (
                 <>
-                  <div style={{ width: phone ? "35%" : "45%" }}></div>
-                  <div style={{ display: "flex", gap: "10px" }}>
+                  <div style={{ width: phone && "35%" }}></div>
+                  <div
+                    style={{
+                      display: "flex",
+                      gap: "10px",
+                      position: !phone && "absolute",
+                      right: !phone && "15%",
+                    }}
+                  >
                     <Keep onClick={() => setModalOpen(false)}>Keep</Keep>
                     <Delete onClick={deletePost}>Delete</Delete>
                   </div>

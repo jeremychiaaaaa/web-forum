@@ -32,6 +32,9 @@ export const App = () => {
     window.matchMedia("(max-width: 768px)").matches
   );
 
+  // state to handle number of posts to conditionally render height of parent container
+  const [numOfPosts,setNumOfPosts] = useState(0)
+
   // whenever a user refreshes a page, load the user specific content if user previously signed in
   useEffect(() => {
     axios
@@ -105,7 +108,7 @@ export const App = () => {
           <Routes>
             <Route
               path="/"
-              element={phone ? <AllPostsPhone phone={phone} /> : <AllPosts />}
+              element={phone ? <AllPostsPhone phone={phone} /> : <AllPosts numOfPosts={numOfPosts} />}
             />
             <Route path="/login" element={<Login phone={phone} />} />
             <Route path="/register" element={<Register phone={phone} />} />

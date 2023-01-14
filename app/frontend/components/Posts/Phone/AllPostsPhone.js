@@ -162,6 +162,7 @@ const AllPostsPhone = ({ phone }) => {
         topHeaderCategory={topHeaderCategory}
         userId={item.userId}
         phone={phone}
+        setLoader={setLoader}
       />
     );
   });
@@ -187,6 +188,7 @@ const AllPostsPhone = ({ phone }) => {
           topHeaderCategory={topHeaderCategory}
           userId={item.userId}
           phone={phone}
+          setLoader={setLoader}
         />
       );
     });

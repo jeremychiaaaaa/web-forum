@@ -98,12 +98,11 @@ const EditPost = () => {
   const [categoryChoose, setCategoryChoose] = useState();
   const [categoryIDChoose, setCategoryIDChoose] = useState();
   const [allCats, setAllCats] = useState([]);
-  // state to manage errors in the form
 
+  // state to manage errors in the form
   const [error, setError] = useState("");
 
   // state to handle waiting for post to be edited
-
   const [editing, setEditing] = useState(false);
 
   // regex expression here is to check if the file is a valid image type
@@ -143,7 +142,7 @@ const EditPost = () => {
     }
   }, []);
 
-  // callback action for when submitting the post
+  // callback action for when editing the post
 
   const handleSubmit = () => {
     //  let post = {
@@ -154,7 +153,7 @@ const EditPost = () => {
     //     category_name: categoryChoose,
     //     username: username
     // }
-
+    setEditing(true)
     const data = new FormData();
     data.append("post[title]", title);
     data.append("post[description]", description);
@@ -173,8 +172,11 @@ const EditPost = () => {
     })
       .then((res) => {
         if (res.ok) {
+          setEditing(false)
           navigate(`post/${post_id}/${slug}`);
         } else {
+          setEditing(false)
+          setError("An Error has occurred. Please try again")
           throw new Error("Network error");
         }
       })
@@ -255,8 +257,18 @@ const EditPost = () => {
                 color: "red",
               }}
             >
-              {errorMessage}
+              {error}
             </span>
+          )}
+          {editing && (
+            <ReactLoading
+              type={"bubbles"}
+              color={"#ff7f50"}
+              height={70}
+              width={"90%"}
+              className="loader-post"
+              delay={2}
+            />
           )}
         </form>
       </FormWrapper>

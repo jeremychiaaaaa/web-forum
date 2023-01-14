@@ -127,6 +127,7 @@ const Register = ({ phone }) => {
           setErrorMessage("Please check that all fields have been filled in");
         });
     } else {
+      setSuccessfullyPosted("end")
       setErrorMessage("Passwords do not match");
     }
   };

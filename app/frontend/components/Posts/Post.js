@@ -5,11 +5,10 @@ import { useSelector, useDispatch } from "react-redux";
 import styled from "styled-components";
 import { TfiComment } from "react-icons/tfi";
 import { FcLike } from "react-icons/fc";
-
+import ReactPlaceholder from "react-placeholder";
+import "react-placeholder/lib/reactPlaceholder.css";
 import { AiOutlineHeart } from "react-icons/ai";
-
 import { useNavigate } from "react-router-dom";
-
 import { setUnlikePost, setUserLikedPost } from "../../redux/actions";
 import defaultImage from "../../images/default-image.png";
 
@@ -30,10 +29,19 @@ const Container = styled.div`
   background: white;
   box-shadow: 10px 10px 15px -4px rgba(0, 0, 0, 0.3);
 `;
+
+const Placeholder = styled.div`
+  width: ${(props) => (props.phone ? "25%" : "15%")};
+  height: 100%;
+  background-color: lightgray;
+  border-radius: 5px;
+`;
+
 const Image = styled.img`
   width: ${(props) => (props.phone ? "25%" : "15%")};
   object-fit: cover;
   border-radius: 5px;
+  display: ${(props) => (props.imageLoading && "none")};
 `;
 //this is the container for the center portion including time title description and the bottom section in the same column
 
@@ -126,7 +134,7 @@ const Post = ({
   topHeaderCategory,
   included,
   userId,
-  setLoader
+  setLoader,
 }) => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -141,13 +149,19 @@ const Post = ({
   // state to handle profile pic of user who created each respective post
   const [profilePic, setProfilePic] = useState();
 
+  // state to handle loading image state
+  const [imageLoading, setImageLoading] = useState(true);
+
+  // state to handle loading profile image state
+  const [profileImageLoading, setProfileImageLoading] = useState(true);
+
   useEffect(() => {
     axios.get(`/api/v1/users/${userId}`).then((res) => {
       // using the userId of person that created the post, find his/her profile pic
       setProfilePic(res.data.data.attributes.profile_url);
     });
     setLocalLikeCount(likes.data.length);
-     setLoader(false)
+    setLoader(false);
   }, [topHeaderCategory]);
 
   //function to handle like and unlike of a post
@@ -213,11 +227,19 @@ const Post = ({
   const redirectToViewPost = () => {
     navigate(`post/${post_id}/${slug}`);
   };
+  console.log(imageLoading);
 
   return (
     <Parent>
       <Container onClick={redirectToViewPost} phone={phone}>
-        <Image src={image_url} phone={phone} />
+        <Image
+          onLoad={() => setImageLoading(false)}
+          src={image_url}
+          phone={phone}
+          imageLoading={imageLoading}
+        />
+        {imageLoading && <div className="skeleton" />}
+
         <MiddlePortion phone={phone}>
           <CreatedAt phone={phone}>
             Posted <Moment fromNow>{created_at}</Moment>
@@ -260,8 +282,11 @@ const Post = ({
                 height: phone ? 20 : 30,
                 borderRadius: phone ? 10 : 15,
                 objectFit: "cover",
+                display: profileImageLoading && 'none'
               }}
+              onLoad={() => setProfileImageLoading(false)}
             />
+            {profileImageLoading && <div className="skeleton-profile-image" />}
           </span>
 
           <div

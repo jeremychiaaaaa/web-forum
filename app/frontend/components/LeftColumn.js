@@ -79,7 +79,7 @@ const LeftColumn = () => {
           alignItems: "center",
           alignSelf: "center",
           height: 90,
-          paddingTop: 20,
+          paddingTop: 5,
         }}
       >
         <span

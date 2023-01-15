@@ -22,7 +22,6 @@ p {
   }
 }
 
-
 /* dropdown component styling */
 
 .container {
@@ -96,6 +95,14 @@ p {
     cursor: pointer;
     background-color: rgba(220, 220, 220, 0.4);
   }
+  .skeleton {
+    width: 25%;
+  }
+  .skeleton-profile-image {
+    width:20px;
+    height:20px;
+    border-radius: 10px;
+  }
 }
 
 /*styling for search input on home page */
@@ -161,4 +168,30 @@ p {
   display: flex;
   justify-content: center;
   padding: 0px 15px;
+}
+
+/* animation for placeholder when loading post content */
+
+.skeleton {
+  width: 15%;
+  height: 100%;
+  border-radius: 5px;
+  animation: loading-animation 1s linear infinite alternate;
+}
+
+.skeleton-profile-image{
+  width:30px;
+  height:30px;
+  border-radius: 15px;
+  animation: loading-animation 1s linear infinite alternate;
+}
+
+
+@keyframes loading-animation {
+  0% {
+    background-color: hsl(200, 20%, 80%);
+  }
+  100% {
+    background-color: hsl(200, 20%, 95%);
+  }
 }

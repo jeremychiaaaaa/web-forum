@@ -194,8 +194,8 @@ const IndividualComment = ({
     setLocalLikeCount(comment_likes);
 
     // get the comments already liked by the particular logged in user
-
     // using the userId find the specific username of user who made the comment
+    
     axios
       .get(`/api/v1/users/${userId}`)
       .then((res) => {

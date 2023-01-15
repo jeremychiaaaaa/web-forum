@@ -127,7 +127,7 @@ const AllPosts = () => {
         })
         .catch((res) => console.log(res));
     }
-  }, [category, userLikeAction, userLogOut]);
+  }, [category, userLikeAction, userLogOut,topHeaderCategory]);
   console.log(category)
   // when user clicks on add post, need to check if the user has already logged in.
   const addPost = () => {

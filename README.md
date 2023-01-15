@@ -1,5 +1,8 @@
 # README
 
+#**Jeremy Chia (A0258834R)**
+
+
 #**This is a simple web forum website that supports CRUD operations such as creating, updating, editing and deleting posts / comments**
 
 This app uses: <br />

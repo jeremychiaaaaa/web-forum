@@ -87,14 +87,15 @@ const Header = ({ phone, tablet }) => {
     >
       <div
         style={{
-          width: "80%",
+          width: !phone && "80%",
           display: "flex",
-          justifyContent:
-            username !== ""
-              ? tablet
-                ? "space-between"
-                : "center"
-              : "space-between",
+          justifyContent: phone
+            ? "center"
+            : username !== ""
+            ? tablet
+              ? "space-between"
+              : "center"
+            : "space-between",
           margin: "0 auto",
           alignItems: "center",
           height: "100%",

@@ -7,7 +7,7 @@ import { useNavigate } from "react-router-dom";
 import { setAllCategories } from "../redux/actions";
 
 const LeftBar = styled.div`
-  width: 20%;
+  width: ${(props) => (props.tablet ? "35vw" : "20vw")};
   display: flex;
   flex-direction: column;
 
@@ -45,7 +45,7 @@ const Logo = styled.img`
   height: 20px;
 `;
 
-const LeftColumn = () => {
+const LeftColumn = ({ tablet }) => {
   const navigate = useNavigate();
 
   const [selected, setSelected] = useState(-1);
@@ -71,7 +71,7 @@ const LeftColumn = () => {
   };
 
   return (
-    <LeftBar>
+    <LeftBar tablet={tablet}>
       <div
         style={{
           display: "flex",

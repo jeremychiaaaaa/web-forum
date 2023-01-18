@@ -32,8 +32,13 @@ export const App = () => {
     window.matchMedia("(max-width: 768px)").matches
   );
 
+  //state to handle tablet display or not
+  const [tablet, setTablet] = useState(
+    window.matchMedia("(min-width:768px) and (max-width: 1024px)").matches
+  );
+
   // state to handle number of posts to conditionally render height of parent container
-  const [numOfPosts,setNumOfPosts] = useState(0)
+  const [numOfPosts, setNumOfPosts] = useState(0);
 
   // whenever a user refreshes a page, load the user specific content if user previously signed in
   useEffect(() => {
@@ -94,10 +99,10 @@ export const App = () => {
   return (
     <>
       <div style={{ display: "flex", width: "100%", overflowX: "hidden" }}>
-        {!phone && <LeftColumn />}
+        {!phone && <LeftColumn tablet={tablet} />}
         <div
           style={{
-            width: phone ? "100vw" : "85vw",
+            width: phone ? "100vw" : tablet ? "65vw" : "80vw",
             display: "flex",
             flexDirection: "column",
             background: "rgba(220,220,220,0.2)",
@@ -108,7 +113,13 @@ export const App = () => {
           <Routes>
             <Route
               path="/"
-              element={phone ? <AllPostsPhone phone={phone} /> : <AllPosts numOfPosts={numOfPosts} />}
+              element={
+                phone ? (
+                  <AllPostsPhone phone={phone} />
+                ) : (
+                  <AllPosts numOfPosts={numOfPosts} />
+                )
+              }
             />
             <Route path="/login" element={<Login phone={phone} />} />
             <Route path="/register" element={<Register phone={phone} />} />

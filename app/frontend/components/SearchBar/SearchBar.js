@@ -100,7 +100,7 @@ const SearchBar = ({
             padding: 16,
             background: "rgba(220,220,220,0.8)",
             color: "#ff7f50",
-            transform: "translate(30px,4px)",
+            transform: "translate(40px,4px)",
             borderRadius: 5,
             cursor: "pointer",
           }}

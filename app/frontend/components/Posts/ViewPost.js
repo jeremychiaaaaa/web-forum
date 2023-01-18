@@ -71,6 +71,7 @@ const Image = styled.img`
   object-fit: cover;
   object-position: 50% 0%;
   margin-top: 25px;
+  display: ${(props) => (props.imageLoading ? "none" : "block")};
 `;
 
 const Body = styled.div`
@@ -198,7 +199,7 @@ const ViewPost = ({ phone }) => {
   // get the specific post based on slug value from api
   const dispatch = useDispatch();
   const { slug, post_id } = useParams();
-  const { username, user_id, userLikedPost } = useSelector(
+  const { username, user_id, userLikedPost, userLogOut } = useSelector(
     (state) => state.userReducer
   );
 
@@ -241,7 +242,12 @@ const ViewPost = ({ phone }) => {
   const [sortCategory, setSortCategory] = useState("Most Popular");
 
   // local state to handle liking of post ( same idea as liking post on main page)
+
   const [localLikeCount, setLocalLikeCount] = useState();
+
+  // state to handle loading of image and while loading display skeleton
+
+  const [imageLoading, setImageLoading] = useState(true);
 
   //state to handle while fetching data from backend
   const [loader, setLoader] = useState(false);
@@ -290,7 +296,7 @@ const ViewPost = ({ phone }) => {
       .catch((res) => console.log(res));
 
     setLoader(false);
-  }, [sortCategory, reload]);
+  }, [sortCategory, reload, userLogOut]);
 
   // action to handle posting a comment
 
@@ -579,7 +585,12 @@ const ViewPost = ({ phone }) => {
               </div>
             </div>
 
-            <Image src={imageURL} />
+            <Image
+              src={imageURL}
+              onLoad={() => setImageLoading(false)}
+              imageLoading={imageLoading}
+            />
+            {imageLoading && <div className="view-post-skeleton" />}
             <Body>{description}</Body>
 
             <div

@@ -186,6 +186,14 @@ p {
   animation: loading-animation 1s linear infinite alternate;
 }
 
+.view-post-skeleton {
+  width:90%;
+  height:700px;
+  border-radius: 5px;
+  margin-top:25px;
+  animation: loading-animation 1s linear infinite alternate;
+}
+
 
 @keyframes loading-animation {
   0% {

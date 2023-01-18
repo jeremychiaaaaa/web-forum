@@ -21,8 +21,6 @@ const Container = styled.div`
   align-items: center;
   gap: 10px;
   flex-direction: row;
-  width: ${(props) => !props.phone && "60%"};
-  margin: 0px auto;
   padding: 15px 0px;
   transform: ${(props) => props.phone && "translateX(-10px)"};
 `;
@@ -37,7 +35,7 @@ const Login = styled.div`
   color: #ff7f50;
   font-weight: 600;
   font-family: Poppins;
-
+  transform: ${(props)=>!props.phone && 'translateX(-40px)'};
   a {
     color: #ff7f50;
     text-decoration: none;
@@ -51,6 +49,7 @@ const Signup = styled.div`
   text-align: center;
   color: white;
   font-family: Poppins;
+  transform: ${(props)=>!props.phone && 'translateX(-30px)'};
   a {
     color: white;
     text-decoration: none;
@@ -81,12 +80,14 @@ const Header = ({ phone }) => {
   return (
     <div
       style={{
-        display: "flex",
         width: "100%",
         background: "white",
         height: 90,
       }}
     >
+      <div style={{width:'80%',display:'flex',justifyContent:'space-between',margin:'0 auto',alignItems:'center',height:'100%'}}>
+
+     
       <Spacing phone={phone} username={username} />
 
       {username === "" ? (
@@ -100,12 +101,14 @@ const Header = ({ phone }) => {
         </Container>
       ) : (
         <Container phone={phone}>
+       
           <span
             style={{
               color: "gray",
               fontFamily: "Poppins",
               display: "flex",
               alignItems: "center",
+              
             }}
           >
             Welcome Back, &nbsp;
@@ -154,7 +157,8 @@ const Header = ({ phone }) => {
             }}
           />
         </Container>
-      )}
+      )} 
+      </div>
     </div>
   );
 };

@@ -74,7 +74,7 @@ const AllPosts = () => {
 
   const [loader, setLoader] = useState(false);
 
-  //state to handle posts from databasse
+  //state to handle posts from database
   const [posts, setPosts] = useState([]);
 
   // state to handle when user likes and unlike to update the rendered screen with latest data from api

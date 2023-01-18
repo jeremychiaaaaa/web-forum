@@ -109,7 +109,7 @@ export const App = () => {
             height: "100%",
           }}
         >
-          <Header phone={phone} />
+          <Header phone={phone} tablet={tablet} />
           <Routes>
             <Route
               path="/"

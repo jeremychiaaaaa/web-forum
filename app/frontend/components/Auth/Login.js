@@ -92,16 +92,21 @@ const Login = ({ phone }) => {
       .post("/api/v1/sessions/login", user, { withCredentials: true })
       .then((res) => {
         // this means that the user has successfully logged in
-
+        if (res.data.errors) {
+          setSuccessfullyPosted("end");
+          setErrorMessage(
+            "Please check that your username/password is correct"
+          );
+        } else {
+          dispatch(setUsername(temporaryUsername));
+          dispatch(setUserID(res.data.data.id));
+          dispatch(setUserPic(res.data.data.attributes.profile_url));
+          setSuccessfullyPosted("end");
+          navigate(new_user ? "/" : -1);
+        }
         // set redux store username, user_id, user_pic state
 
-        dispatch(setUsername(temporaryUsername));
-        dispatch(setUserID(res.data.data.id));
-        dispatch(setUserPic(res.data.data.attributes.profile_url));
-        setSuccessfullyPosted("end");
         //after login navigate back to home page
-
-        navigate(new_user ? "/" : -1);
       })
       .catch((res) => {
         setSuccessfullyPosted("end");

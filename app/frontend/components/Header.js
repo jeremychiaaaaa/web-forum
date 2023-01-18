@@ -35,7 +35,7 @@ const Login = styled.div`
   color: #ff7f50;
   font-weight: 600;
   font-family: Poppins;
-  transform: ${(props)=>!props.phone && 'translateX(-40px)'};
+  transform: ${(props) => !props.phone && "translateX(-40px)"};
   a {
     color: #ff7f50;
     text-decoration: none;
@@ -49,14 +49,14 @@ const Signup = styled.div`
   text-align: center;
   color: white;
   font-family: Poppins;
-  transform: ${(props)=>!props.phone && 'translateX(-30px)'};
+  transform: ${(props) => !props.phone && "translateX(-30px)"};
   a {
     color: white;
     text-decoration: none;
   }
 `;
 
-const Header = ({ phone }) => {
+const Header = ({ phone, tablet }) => {
   const navigate = useNavigate();
   // get the username from redux store
 
@@ -85,79 +85,89 @@ const Header = ({ phone }) => {
         height: 90,
       }}
     >
-      <div style={{width:'80%',display:'flex',justifyContent:'space-between',margin:'0 auto',alignItems:'center',height:'100%'}}>
+      <div
+        style={{
+          width: "80%",
+          display: "flex",
+          justifyContent:
+            username !== ""
+              ? tablet
+                ? "space-between"
+                : "center"
+              : "space-between",
+          margin: "0 auto",
+          alignItems: "center",
+          height: "100%",
+        }}
+      >
+        <Spacing phone={phone} username={username} />
 
-     
-      <Spacing phone={phone} username={username} />
-
-      {username === "" ? (
-        <Container>
-          <Login phone={phone}>
-            <Link to="/login">Log In</Link>
-          </Login>
-          <Signup phone={phone}>
-            <Link to="/register">Sign Up</Link>
-          </Signup>
-        </Container>
-      ) : (
-        <Container phone={phone}>
-       
-          <span
-            style={{
-              color: "gray",
-              fontFamily: "Poppins",
-              display: "flex",
-              alignItems: "center",
-              
-            }}
-          >
-            Welcome Back, &nbsp;
-            <div
+        {username === "" ? (
+          <Container>
+            <Login phone={phone}>
+              <Link to="/login">Log In</Link>
+            </Login>
+            <Signup phone={phone}>
+              <Link to="/register">Sign Up</Link>
+            </Signup>
+          </Container>
+        ) : (
+          <Container phone={phone}>
+            <span
               style={{
+                color: "gray",
+                fontFamily: "Poppins",
                 display: "flex",
                 alignItems: "center",
-                gap: 10,
+              }}
+            >
+              Welcome Back, &nbsp;
+              <div
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: 10,
+                  cursor: "pointer",
+                }}
+                onClick={() => navigate("/profile")}
+              >
+                <span style={{ fontWeight: 600, color: "#ff7f50" }}>
+                  {username}
+                </span>
+                {user_pic ? (
+                  <img
+                    src={user_pic}
+                    style={{
+                      width: 30,
+                      height: 30,
+                      borderRadius: 15,
+                      objectFit: "cover",
+                    }}
+                  />
+                ) : (
+                  <img
+                    src={defaultImage}
+                    style={{
+                      width: 30,
+                      height: 30,
+                      borderRadius: 15,
+                      objectFit: "cover",
+                    }}
+                  />
+                )}
+              </div>
+            </span>
+            <FiLogOut
+              onClick={LogOut}
+              style={{
+                color: "gray",
+                transform: phone ? "translateX(20px)" : "translateX(50px)",
+                fontSize: "1.2rem",
                 cursor: "pointer",
               }}
-              onClick={() => navigate("/profile")}
-            >
-              <span style={{ fontWeight: 600, color: "#ff7f50" }}>
-                {username}
-              </span>
-              {user_pic ? (
-                <img
-                  src={user_pic}
-                  style={{
-                    width: 30,
-                    height: 30,
-                    borderRadius: 15,
-                    objectFit: "cover",
-                  }}
-                />
-              ) : (
-                <img
-                  src={defaultImage}
-                  style={{
-                    width: 30,
-                    height: 30,
-                    borderRadius: 15,
-                    objectFit: "cover",
-                  }}
-                />
-              )}
-            </div>
-          </span>
-          <FiLogOut
-            onClick={LogOut}
-            style={{
-              color: "gray",
-              transform: phone ? "translateX(20px)" : "translateX(50px)",
-              fontSize: "1.2rem",
-              cursor: "pointer",
-            }}
-          />
-        </Container>
-      )} 
+            />
+          </Container>
+        )}
       </div>
     </div>
   );

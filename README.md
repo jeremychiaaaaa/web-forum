@@ -12,7 +12,6 @@ This app uses: <br />
     <li>Ruby version: 3.1.3</li>
     <li>Rails version: 7.0.4</li>
     <li>Styled Components version: 5.3.6</li>
-
     <li>Database: postgresql</li>
 </ul>
 <br />

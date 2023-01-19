@@ -2,6 +2,7 @@
 
 #**Jeremy Chia (A0258834R)**
 
+[JeremyChiaHanSheng_A0258834R_FinalWriteup.pdf](https://github.com/jeremychiaaaaa/web-forum/files/10454481/JeremyChiaHanSheng_A0258834R_FinalWriteup.pdf)
 
 #**This is a simple web forum website that supports CRUD operations such as creating, updating, editing and deleting posts / comments**
 
@@ -11,6 +12,7 @@ This app uses: <br />
     <li>Ruby version: 3.1.3</li>
     <li>Rails version: 7.0.4</li>
     <li>Styled Components version: 5.3.6</li>
+
     <li>Database: postgresql</li>
 </ul>
 <br />
